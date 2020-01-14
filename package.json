@@ -1,0 +1,38 @@
+{
+  "name": "bogie",
+  "version": "1.0.0",
+  "description": "Collision extension for PIXI.js",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fix": "eslint --fix ./src",
+    "dev": "webpack-dev-server",
+    "build": "NODE_ENV=production webpack --mode=production"
+  },
+  "keywords": [
+    "pixi",
+    "physics"
+  ],
+  "author": "J Riley Harrington <jrileyharrington@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "peerDependencies": {
+    "pixi.js": "^5.2.0"
+  },
+  "dependencies": {
+    "pixi.js": "^5.2.0"
+  }
+}
