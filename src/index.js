@@ -1,11 +1,9 @@
-import * as physics from './physics';
-import * as geom from './geom';
+import * as Physics from './physics';
+import * as Geom from './geom';
 
 const Bogie = {
-  physics,
-  geom
+  Physics,
+  Geom
 };
-
-if (window) window.Bogie = Bogie;
 
 export default Bogie;

@@ -8,11 +8,16 @@ module.exports = {
   output: {
     filename: 'bogie.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/dev/'
+    library: 'Bogie',
+    libraryTarget: 'window',
+    libraryExport: 'default'
   },
   devtool: env === 'development' ? 'inline-source-map' : false,
   devServer: {
-    contentBase: './examples/',
+    contentBase: [
+      path.resolve(__dirname, 'examples'),
+      path.resolve(__dirname, 'node_modules')
+    ],
     hot: true,
     open: true
   },
