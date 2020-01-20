@@ -10,25 +10,38 @@ import { Point, Vector } from '.';
 
 const _defaults = {
   maxSpeed: Infinity,
+  minSpeed: 0,
   maxRotation: Infinity,
+  minRotation: 0,
   maxSize: Infinity,
+  minSize: 0,
   lockVelocityToAngle: false
 };
 
 export default class Spacial {
   /**
    * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
-   * @param {PIXI.Container} container What to PIXI container to draw the sprite onto.
-   * @return {Spacial} Returns this Spacial for chaining functions.
+   * @param {Spacial} parent Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
+   * @param {Object} options Base level options for Spacial.
+   * @param {number} options.maxSpeed Limit on positions updates per tick regardless of velocity or acceleration settings.
+   * @param {number} options.minSpeed Limit on positions updates per tick regardless of velocity or acceleration settings.
+   * @param {number} options.maxRotation Limit on angle updates per tick regardless of rotation or spin settings.
+   * @param {number} options.minRotation Limit on angle updates per tick regardless of rotation or spin settings.
+   * @param {number} options.maxSize Limit on scale factor regardless of dilation or stretch settings
+   * @param {number} options.minSize Limit on scale factor regardless of dilation or stretch settings
+   * @param {boolean} options.lockVelocityToAngle When velocity changes direction angle is updated too. Projectile or propulsion movement.
    */
   constructor (parent = null, {
     maxSpeed = _defaults.maxSpeed,
+    minSpeed = _defaults.minSpeed,
     maxRotation = _defaults.maxRotation,
+    minRotation = _defaults.minRotation,
     maxSize = _defaults.maxSize,
+    minSize = _defaults.minSize,
     lockVelocityToAngle = _defaults.lockVelocityToAngle
   } = _defaults) {
-    this.id = U.uuid();
-    this.parent = parent;
+    this.id = U.uuid(); // For Internal Uniquness Identification
+    this.parent = parent; // Can be null or referential to another Spacial.
 
     // Spacial values
     this.pos = Point.Zero(); // Position - Tranlational value
@@ -48,9 +61,15 @@ export default class Spacial {
     this.watcher = null; // World.watcher object set by 'makeCollidable' function
 
     // Options
-    this.maxSpeed = maxSpeed; // Caps +/- velocity at this value
-    this.maxRotation = maxRotation; // Caps +/- rotation at this value
-    this.maxSize = maxSize; // Caps +/- dilation at this value
+    if (maxSpeed < minSpeed) throw Error(`maxSpeed (${maxSpeed}) cannot be lower than minSpeed (${minSpeed})`);
+    this.maxSpeed = maxSpeed; // Upper bound +/- velocity at this value
+    this.minSpeed = minSpeed; // Lower bound +/- velocity at this value
+    if (maxRotation < minRotation) throw Error(`maxRotation (${maxRotation}) cannot be lower than minRotation (${minRotation})`);
+    this.maxRotation = maxRotation; // Upper bound +/- rotation at this value
+    this.minRotation = minRotation; // Lower bound +/- rotation at this value
+    if (maxSize < minSize) throw Error(`maxSize (${maxSize}) cannot be lower than minSize (${minSize})`);
+    this.maxSize = maxSize; // Upper bound +/- scale factor at this value
+    this.minSize = minSize; // Lower bound +/- scale factor at this value
     this.lockVelocityToAngle = lockVelocityToAngle; // If true, velocity is always relative to angle like propulsion.
   }
 
@@ -60,7 +79,7 @@ export default class Spacial {
    * @return {Spacial} Returns this Spacial for chaining functions.
    */
   makeSprite (container) {
-    this.container = container;
+    if (!this.container) this.container = container;
     this.sprite = new PIXI.Sprite();
     this.gfx = new PIXI.Graphics();
     this.sprite.anchor.set(0.5, 0.5);
@@ -77,6 +96,7 @@ export default class Spacial {
    * @return {Spacial} Returns this Spacial for chaining functions.
    */
   makeDebug (container, color) {
+    if (!this.container) this.container = container;
     return this;
   }
 
@@ -203,7 +223,9 @@ export default class Spacial {
       this.vel.x = xOrVector;
       this.vel.y = y;
     }
+    // Cap the velocity to upper and lower bounds
     if (this.vel.magnitude() > this.maxSpeed) this.vel.magnitude(this.maxSpeed);
+    if (this.vel.magnitude() < this.minSpeed) this.vel.magnitude(this.minSpeed);
     return this;
   }
 
@@ -289,7 +311,9 @@ export default class Spacial {
   rotation (degree) {
     if (!arguments.length) return this.rot;
     this.rot = degree;
+    // Cap the rotation to upper and lower bounds
     if (Math.abs(this.rot) > this.maxRotation) this.rotation(this.maxRotation * Math.sign(this.rot));
+    if (Math.abs(this.rot) < this.minRotation) this.rotation(this.minRotation * Math.sign(this.rot));
     return this;
   }
 
@@ -336,8 +360,11 @@ export default class Spacial {
       this.debug.scale.x = this.scl.x;
       this.debug.scale.y = this.scl.y;
     }
-    if (this.scl.x > this.maxSize) this.scl.x = this.maxSize;
-    if (this.scl.y > this.maxSize) this.scl.y = this.maxSize;
+    // Cap the scale factor to upper and lower bounds
+    if (Math.abs(this.scl.x) > this.maxSize) this.scl.x = this.maxSize * Math.sign(this.scl.x);
+    if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * Math.sign(this.scl.y);
+    if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * Math.sign(this.scl.x);
+    if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * Math.sign(this.scl.y);
     if (typeof cb === 'function') cb();
     return this;
   }

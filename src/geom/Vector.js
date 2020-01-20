@@ -37,6 +37,7 @@ export default class Vector {
   direction (radians) {
     if (!arguments.length) return Math.atan2(this.y, this.x);
     const magnitude = this.magnitude();
+    if (magnitude === 0) console.warn('Setting direction or angle on zero vector not advisable.');
     this.x = Math.cos(radians) * magnitude;
     this.y = Math.sin(radians) * magnitude;
     return this;

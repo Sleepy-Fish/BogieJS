@@ -8,14 +8,14 @@ export default class World {
     };
   }
 
-  add (body, layer = 'global') {
-    if (this.layer(layer).indexOf(body) < 0) {
-      this.layer(layer).push(body);
+  add (spacial, layer = 'global') {
+    if (this.layer(layer).indexOf(spacial) < 0) {
+      this.layer(layer).push(spacial);
     }
   }
 
-  remove (body, layer = 'global') {
-    const index = this.layer(layer).indexOf(body);
+  remove (spacial, layer = 'global') {
+    const index = this.layer(layer).indexOf(spacial);
     if (index >= 0) {
       this.layer(layer).splice(index, 1);
     }
@@ -34,15 +34,17 @@ export default class World {
       interactors = [other];
     }
     const watcher = new EventEmitter();
-    watcher.run = () => { console.warn(' no nono non on '); };
+    watcher.run = (delta) => { console.error(`Collision Actor type ${actor.type} not found!`); };
     switch (actor.type) {
       case 'circle':
-        watcher.run = () => {
+        watcher.run = (delta) => {
           for (const interactor of interactors) {
             switch (interactor.type) {
               case 'circle':
                 collisions.circleToCircle(watcher, actor, interactor);
                 break;
+              default:
+                console.error(`Collision Interactor type ${interactor.type} not found for Actor type ${actor.type}!`);
             }
           }
         };

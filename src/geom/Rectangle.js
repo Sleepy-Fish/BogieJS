@@ -17,7 +17,7 @@ export default class Rectangle extends Spacial {
     this.type = 'rectangle';
   }
 
-  makeDebug (container, color = 0x00ffff) {
+  makeDebug (container, color = 0x009900) {
     this.debug = new PIXI.Sprite();
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);

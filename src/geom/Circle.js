@@ -14,7 +14,9 @@ export default class Circle extends Spacial {
     this.type = 'circle';
   }
 
-  makeDebug (container, color = 0xff0000) {
+  makeDebug (container, color = 0x009900) {
+    super.makeDebug(container);
+    if (this.debug) this.container.removeChild(this.debug);
     this.debug = new PIXI.Sprite();
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);
@@ -22,7 +24,7 @@ export default class Circle extends Spacial {
     this.debug.addChild(gfx);
     this.debug.x = this.x();
     this.debug.y = this.y();
-    container.addChild(this.debug);
+    this.container.addChild(this.debug);
     return this;
   }
 }

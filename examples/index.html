@@ -7,12 +7,16 @@
         <link rel="icon" type="image/png" href="bogie.png">
         <script src="bogie.js"></script>
         <script src="pixi.js/dist/pixi.js"></script>
+        <script src="initPixi.js"></script>
+        <script src="circleCollision.js"></script>
         <title>BogieJS Samples</title>
-        <script>
-            console.log(window);
-        </script>
     </head>
     <body>
-        <a href="sample1.html">Sample 1</a>
+        <button onclick="Bogie.circleCollision()">Circle Collision</button>
+        <div id="view-port"></div>
     </body>
+    <script>
+        // Setup Default Scene
+        Bogie.circleCollision();
+    </script>
 </html>
