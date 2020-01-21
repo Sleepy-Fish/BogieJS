@@ -1,10 +1,3 @@
-window.Prism.plugins.NormalizeWhitespace.setDefaults({
-  'remove-trailing': true,
-  'remove-indent': true,
-  'left-trim': true,
-  'right-trim': true
-});
-
 window.Bogie.init = () => {
   var viewport = document.getElementById('viewport');
   viewport.innerHTML = '';
@@ -32,7 +25,7 @@ window.Bogie.selectScene = (elem, scene) => {
       if (raw.includes('// <START> //')) raw = raw.split('// <START> //')[1];
       if (raw.includes('// <END> //')) raw = raw.split('// <END> //')[0];
       const html = window.Prism.highlight(
-        raw.trim(),
+        raw,
         window.Prism.languages.javascript,
         'javascript'
       );
