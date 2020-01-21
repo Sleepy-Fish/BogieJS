@@ -1,22 +1,47 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="author" content="J Riley Harrington">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <link rel="icon" type="image/png" href="bogie.png">
-        <script src="bogie.js"></script>
-        <script src="pixi.js/dist/pixi.js"></script>
-        <script src="initPixi.js"></script>
-        <script src="circleCollision.js"></script>
-        <title>BogieJS Samples</title>
-    </head>
-    <body>
-        <button onclick="Bogie.circleCollision()">Circle Collision</button>
-        <div id="view-port"></div>
-    </body>
-    <script>
-        // Setup Default Scene
-        Bogie.circleCollision();
-    </script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="J Riley Harrington">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" type="image/png" href="bogie.png">
+    <title>BogieJS Samples</title>
+
+    <!-- Library Imports -->
+    <script src="bogie.js"></script>
+    <script src="pixi.js/dist/pixi.js"></script>
+    <script src="prismjs/prism.js"></script>
+    <script src="prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.min.js"></script>
+
+    <!-- Very Simple Example Page Functions -->
+    <script src="index.js"></script>
+
+    <!-- Example Scenes Get Attached To Bogie Object -->
+    <script src="rectangleCollision.js"></script>
+    <script src="circleCollision.js"></script>
+
+    <!-- Example Page Styling -->
+    <link href="index.css" rel="stylesheet" />
+    <link href="prismjs/themes/prism-funky.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Bogie.JS</h1>
+    <h3>A simple collision extension for PIXI.js</h3>
+    <br>
+    <div id="content">
+      <div id="scenes">
+        <button onclick="Bogie.selectScene(this, 'rectangleCollision');" id="default-scene" >Rectangle Collision</button>
+        <button onclick="Bogie.selectScene(this, 'circleCollision');" >Circle Collision</button>
+        <button> ... </button>
+      </div>
+      <div id="viewport"></div>
+      <div id="code">
+        <pre><code id="prism" class="language-js"></code></pre>
+      </div>
+    </div>
+  </body>
+  <script>
+    // Start Default Scene
+    document.getElementById('default-scene').click();
+  </script>
 </html>

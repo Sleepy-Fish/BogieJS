@@ -18,10 +18,11 @@ export default class Rectangle extends Spacial {
   }
 
   makeDebug (container, color = 0x009900) {
-    this.debug = new PIXI.Sprite();
+    if (this.debug) this.container.removeChild(this.debug);
+    super.makeDebug(container);
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);
-    gfx.drawRect(0, 0, this.height, this.width);
+    gfx.drawRect(-(this.width / 2), -(this.height / 2), this.width, this.height);
     this.debug.addChild(gfx);
     this.debug.x = this.x();
     this.debug.y = this.y();

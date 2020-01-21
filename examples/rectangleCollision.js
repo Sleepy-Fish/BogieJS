@@ -1,12 +1,12 @@
 if (!window.Bogie.scenes) window.Bogie.scenes = {};
-window.Bogie.scenes.circleCollision = () => {
+window.Bogie.scenes.rectangleCollision = () => {
   // Clear existing example and re-initialize
   window.Bogie.init();
 
   // Create global shortcut variables
   // (These would normally be declared via package import syntax)
   const World = window.Bogie.Physics.World;
-  const Circle = window.Bogie.Geom.Circle;
+  const Rectangle = window.Bogie.Geom.Rectangle;
   const Point = window.Bogie.Geom.Point;
   const Vector = window.Bogie.Geom.Vector;
   const app = window.app; // This is set in init()
@@ -16,16 +16,18 @@ window.Bogie.scenes.circleCollision = () => {
   const world = new World();
 
   // Create a small circle that will move about the screen and collide with things
-  const actor = new Circle(null, {
-    radius: 10
+  const actor = new Rectangle(null, {
+    width: 100,
+    height: 10
   })
     .position(new Point(10, 10))
     .makeCollidable(world)
     .makeDebug(app.stage);
 
   // Create a large circle that will stay centered on screen and be collided with
-  const interactor = new Circle(null, {
-    radius: 80
+  const interactor = new Rectangle(null, {
+    width: 350,
+    height: 100
   })
     .position(new Point(app.view.width / 2, app.view.height / 2))
     .makeCollidable(world)
@@ -34,7 +36,8 @@ window.Bogie.scenes.circleCollision = () => {
   // Initialize velocity of actor circle so it will collide
   // To do this we set to the velocity vector to the angle between both circle centers
   const angle = actor.position().angle(interactor.position());
-  actor.velocity(Vector.Zero().magnitude(4).angle(angle));
+  actor.velocity(Vector.Zero().magnitude(2).angle(angle));
+  actor.rotation(3);
 
   // Store how far apart the circles start so we know when to reset the scene
   const startDistance = actor.position().distance(interactor.position());
@@ -42,6 +45,7 @@ window.Bogie.scenes.circleCollision = () => {
   // Create a watcher between the two circles
   const watcher = world.watcher(actor, interactor);
 
+  /*
   // Set event handlers for collision events
   watcher.on('enter', () => {
     // enter is when the actor becomes entirely eclosed within interactor (if possible due to size)
@@ -63,11 +67,15 @@ window.Bogie.scenes.circleCollision = () => {
     // collide-outer is like collide but only happens when the actor was previously outside of interactor
     actor.makeDebug(null, 0x0000ff);
   });
+  */
 
   // Add Bogie to PIXI app
   const loop = delta => {
     // Reset actor postion if once it gets too far away
-    if (actor.position().distance(interactor.position()) > startDistance) actor.position(new Point(10, 10));
+    if (actor.position().distance(interactor.position()) > startDistance) {
+      actor.position(new Point(10, 10));
+      actor.angle(0);
+    }
     // Run the Bogie objects that have a run function
     actor.run(delta);
     interactor.run(delta);

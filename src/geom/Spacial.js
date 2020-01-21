@@ -97,6 +97,8 @@ export default class Spacial {
    */
   makeDebug (container, color) {
     if (!this.container) this.container = container;
+    this.debug = new PIXI.Sprite();
+    this.debug.anchor.set(0.5, 0.5);
     return this;
   }
 

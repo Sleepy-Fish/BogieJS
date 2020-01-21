@@ -34,22 +34,20 @@ export default class World {
       interactors = [other];
     }
     const watcher = new EventEmitter();
-    watcher.run = (delta) => { console.error(`Collision Actor type ${actor.type} not found!`); };
-    switch (actor.type) {
-      case 'circle':
-        watcher.run = (delta) => {
-          for (const interactor of interactors) {
-            switch (interactor.type) {
-              case 'circle':
-                collisions.circleToCircle(watcher, actor, interactor);
-                break;
-              default:
-                console.error(`Collision Interactor type ${interactor.type} not found for Actor type ${actor.type}!`);
-            }
-          }
-        };
-        break;
+    if (!collisions[actor.type]) {
+      watcher.run = () => { console.error(`Collision Actor type ${actor.type} not found!`); };
+      return watcher;
     }
+    watcher.run = () => {
+      for (const interactor of interactors) {
+        const handleCollision = collisions[actor.type][interactor.type];
+        if (typeof handleCollision !== 'function') {
+          console.error(`Collision Interactor type ${interactor.type} not found for Actor type ${actor.type}!`);
+          continue;
+        }
+        handleCollision(watcher, actor, interactor);
+      }
+    };
     return watcher;
   }
 }

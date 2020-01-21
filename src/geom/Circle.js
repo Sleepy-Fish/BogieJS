@@ -15,9 +15,8 @@ export default class Circle extends Spacial {
   }
 
   makeDebug (container, color = 0x009900) {
-    super.makeDebug(container);
     if (this.debug) this.container.removeChild(this.debug);
-    this.debug = new PIXI.Sprite();
+    super.makeDebug(container);
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);
     gfx.drawCircle(0, 0, this.radius);
