@@ -77,7 +77,6 @@ window.Bogie.scenes.rectangleCollision = () => {
     // Run the Bogie objects that have a run function
     actor.run(delta);
     interactor.run(delta);
-    watcher.run();
   };
   app.ticker.add(delta => loop(delta));
   // <END> //
