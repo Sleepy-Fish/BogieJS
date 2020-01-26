@@ -42,31 +42,29 @@ window.Bogie.scenes.rectangleCollision = () => {
   // Store how far apart the circles start so we know when to reset the scene
   const startDistance = actor.position().distance(interactor.position());
 
-  // Create a watcher between the two circles
-  const watcher = world.watcher(actor, interactor);
-
   /*
   // Set event handlers for collision events
-  watcher.on('enter', () => {
+  actor.on('enter', () => {
     // enter is when the actor becomes entirely eclosed within interactor (if possible due to size)
     interactor.makeDebug(null, 0x00ffff);
-  });
-  watcher.on('leave', () => {
+  }, interactor);
+
+  actor.on('leave', () => {
     // leave is when the actor and interactor become entirely decoupled with no overlaps
     interactor.makeDebug(null, 0x009900);
-  });
-  watcher.on('collide', () => {
+  }, interactor);
+  actor.on('collide', () => {
     // collide is a one time event that fires when the bounds of actor and interaction first overlap
     interactor.makeDebug(null, 0xff0000);
-  });
-  watcher.on('collide-inner', () => {
+  }, interactor);
+  actor.on('collide-inner', () => {
     // collide-inner is like collide but only happens when the actor was previously inside of interactor
     actor.makeDebug(null, 0x009900);
-  });
-  watcher.on('collide-outer', () => {
+  }, interactor);
+  actor.on('collide-outer', () => {
     // collide-outer is like collide but only happens when the actor was previously outside of interactor
     actor.makeDebug(null, 0x0000ff);
-  });
+  }, interactor);
   */
 
   // Add Bogie to PIXI app
