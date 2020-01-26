@@ -8,6 +8,19 @@ export default class World {
     };
   }
 
+  getId (interactors) {
+    if (typeof interactors === 'string') {
+      // World layer so return it as cache id
+      return interactors;
+    } else if (Array.isArray(interactors)) {
+      // Array of spacials so concat the ids for cache id
+      return interactors.map(x => x.id).join('-');
+    } else {
+      // Passed a single spacial so return id for cache id
+      return interactors.id;
+    }
+  }
+
   add (spacial, layer = 'global') {
     if (this.layer(layer).indexOf(spacial) < 0) {
       this.layer(layer).push(spacial);
@@ -26,6 +39,11 @@ export default class World {
     return this.layers[layer];
   }
 
+  // actor is the spacial that is doing the colidding
+  // other is either
+  //  -- 1 a sacial (that you want to watch for collisions on)
+  // -- 2 an array of spacials (that you want to watch for collisions on)
+  // -- 3 a string (the world layer name which you're watching for collisions)
   watcher (actor, other) {
     let interactors = other; // assumes interactor was stored as array of shapes
     if (typeof other === 'string') {
@@ -34,6 +52,7 @@ export default class World {
       interactors = [other];
     }
     const watcher = new EventEmitter();
+    watcher.id = this.getId(other);
     if (!collisions[actor.type]) {
       watcher.run = () => { console.error(`Collision Actor type ${actor.type} not found!`); };
       return watcher;

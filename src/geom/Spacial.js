@@ -18,6 +18,8 @@ const _defaults = {
   lockVelocityToAngle: false
 };
 
+const _collisionEvents = ['leave', 'enter', 'collide', 'collide-inner', 'collide-outer'];
+
 export default class Spacial {
   /**
    * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
@@ -113,6 +115,36 @@ export default class Spacial {
     this.world = world;
     this.layer = layer;
     this.world.add(this, this.layer);
+    this.watchers = {};
+    return this;
+  }
+
+  on (event, cb, interactor = 'default') {
+    if (!_collisionEvents.includes(event)) {
+      console.warn(`Unknown event binding: ${event}`);
+      return;
+    }
+    if (!this.world) {
+      console.warn('Must call `makeCollidable` before binding collision events');
+      return;
+    }
+    const id = this.world.getId(interactor);
+    if (!this.watchers[id]) this.watchers[id] = this.world.watcher(this, interactor);
+    this.watchers[id].on(event, cb);
+    return this;
+  }
+
+  off (event, interactor = 'default') {
+    if (!_collisionEvents.includes(event)) {
+      console.warn(`Unknown event unbinding: ${event}`);
+      return;
+    }
+    if (!this.world) {
+      console.warn('Must call `makeCollidable` before unbinding collision events');
+      return;
+    }
+    const id = this.world.getId(interactor);
+    if (this.watchers[id]) this.watchers[id].removeAllListeners(event);
     return this;
   }
 
@@ -121,6 +153,8 @@ export default class Spacial {
    */
   destroy () {
     this.run = () => {};
+    for (const watcher of Object.values(this.watchers)) watcher.removeAllListeners();
+    this.watchers = {};
     if (this.sprite) this.container.removeChild(this.sprite);
     if (this.debug) this.container.removeChild(this.debug);
     if (this.world) this.world.remove(this, this.layer);
@@ -136,6 +170,9 @@ export default class Spacial {
       this.shift(this.vel);
       this.rotate(this.rot);
       this.dilate(this.dil);
+    }
+    if (this.awake) {
+      for (const watcher of Object.values(this.watchers)) watcher.run(delta);
     }
   }
 
