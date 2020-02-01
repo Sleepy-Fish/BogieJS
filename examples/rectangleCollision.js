@@ -42,7 +42,6 @@ window.Bogie.scenes.rectangleCollision = () => {
   // Store how far apart the circles start so we know when to reset the scene
   const startDistance = actor.position().distance(interactor.position());
 
-  /*
   // Set event handlers for collision events
   actor.on('enter', () => {
     // enter is when the actor becomes entirely eclosed within interactor (if possible due to size)
@@ -65,7 +64,6 @@ window.Bogie.scenes.rectangleCollision = () => {
     // collide-outer is like collide but only happens when the actor was previously outside of interactor
     actor.makeDebug(null, 0x0000ff);
   }, interactor);
-  */
 
   // Add Bogie to PIXI app
   const loop = delta => {

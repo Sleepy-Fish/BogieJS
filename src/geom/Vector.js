@@ -35,7 +35,7 @@ export default class Vector {
 
   // In Radians
   direction (radians) {
-    if (!arguments.length) return Math.atan2(this.y, this.x);
+    if (U.getter(arguments)) return Math.atan2(this.y, this.x);
     const magnitude = this.magnitude();
     if (magnitude === 0) console.warn('Setting direction or angle on zero vector not advisable.');
     this.x = Math.cos(radians) * magnitude;
@@ -45,12 +45,12 @@ export default class Vector {
 
   // In Degrees
   angle (degrees) {
-    if (!arguments.length) return U.toDeg(this.direction());
+    if (U.getter(arguments)) return U.toDeg(this.direction());
     return this.direction(U.toRad(degrees));
   }
 
   magnitude (magnitude) {
-    if (!arguments.length) return Math.sqrt((this.x * this.x) + (this.y * this.y));
+    if (U.getter(arguments)) return Math.sqrt((this.x * this.x) + (this.y * this.y));
     const direction = this.direction();
     this.x = Math.cos(direction) * magnitude;
     this.y = Math.sin(direction) * magnitude;
@@ -137,7 +137,11 @@ export default class Vector {
 
   // ** --- Vector Utility Functions --- ** //
   toPoint () {
-    return Point(this.x, this.y);
+    return new Point(this.x, this.y);
+  }
+
+  toVector () {
+    return this;
   }
 
   toString () {

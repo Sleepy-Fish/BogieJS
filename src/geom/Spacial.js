@@ -44,6 +44,7 @@ export default class Spacial {
   } = _defaults) {
     this.id = U.uuid(); // For Internal Uniquness Identification
     this.parent = parent; // Can be null or referential to another Spacial.
+    this.vertices = [];
 
     // Spacial values
     this.pos = Point.Zero(); // Position - Tranlational value
@@ -95,12 +96,28 @@ export default class Spacial {
    * Overridden in subclasses since the shape to draw is unkonwn / abstract until envoked by subclass.
    * @param {PIXI.Container} container What to PIXI container to draw the debug shape onto.
    * @param {octal} color Color to make debug shape
+   * @param {octal} vcolor Color to make debug vertieces of shape
    * @return {Spacial} Returns this Spacial for chaining functions.
    */
-  makeDebug (container, color) {
+  makeDebug (container, color, vcolor) {
     if (!this.container) this.container = container;
+    if (this.debug) this.container.removeChild(this.debug);
+    if (this.vdebug) for (const vdebug of this.vdebug) this.container.removeChild(vdebug);
     this.debug = new PIXI.Sprite();
     this.debug.anchor.set(0.5, 0.5);
+    this.vdebug = [];
+    for (const vertex of this.vertices) {
+      const vdebug = new PIXI.Sprite();
+      vdebug.anchor.set(0.5, 0.5);
+      const vgfx = new PIXI.Graphics();
+      vgfx.lineStyle(4, vcolor);
+      vgfx.drawCircle(0, 0, 1);
+      vdebug.addChild(vgfx);
+      vdebug.x = vertex.x;
+      vdebug.y = vertex.y;
+      this.container.addChild(vdebug);
+      this.vdebug.push(vdebug);
+    }
     return this;
   }
 
@@ -189,13 +206,18 @@ export default class Spacial {
    * @return {Point|Spacial} If no parameters, getter returns position as Point. If parameters, setter returns this Spacial for chaining functions.
    */
   position (xOrPoint, y, cb) {
-    if (!arguments.length) return this.pos.copy();
+    if (U.getter(arguments)) return this.pos.copy();
+    const origin = this.pos.copy();
     if (xOrPoint instanceof Object) {
       this.pos.x = xOrPoint.x;
       this.pos.y = xOrPoint.y;
     } else {
       this.pos.x = xOrPoint;
       this.pos.y = y;
+    }
+    const delta = { x: this.pos.x - origin.x, y: this.pos.y - origin.y };
+    for (const vertex of this.vertices) {
+      vertex.translate(delta.x, delta.y);
     }
     if (this.sprite) {
       this.sprite.x = this.pos.x;
@@ -204,8 +226,12 @@ export default class Spacial {
     if (this.debug) {
       this.debug.x = this.pos.x;
       this.debug.y = this.pos.y;
+      for (const i in this.vdebug) {
+        this.vdebug[i].x = this.vertices[i].x;
+        this.vdebug[i].y = this.vertices[i].y;
+      }
     }
-    if (typeof cb === 'function') cb();
+    if (typeof cb === 'function') cb(delta.x, delta.y);
     return this;
   }
 
@@ -215,7 +241,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns horizontal location value. If parameter, setter returns this Spacial for chaining functions.
    */
   x (val) {
-    if (!arguments.length) return this.pos.x;
+    if (U.getter(arguments)) return this.pos.x;
     this.position(val, this.pos.y);
     return this;
   }
@@ -226,7 +252,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns vertical location value. If parameter, setter returns this Spacial for chaining functions.
    */
   y (val) {
-    if (!arguments.length) return this.pos.y;
+    if (U.getter(arguments)) return this.pos.y;
     this.position(this.pos.x, val);
     return this;
   }
@@ -254,7 +280,7 @@ export default class Spacial {
    * @return {Vector|Spacial} If no parameters, getter returns tranlation per tick as Vector. If parameters, setter returns this Spacial for chaining functions.
    */
   velocity (xOrVector, y) {
-    if (!arguments.length) return this.vel.copy();
+    if (U.getter(arguments)) return this.vel.copy();
     if (xOrVector instanceof Object) {
       this.vel.x = xOrVector.x;
       this.vel.y = xOrVector.y;
@@ -274,7 +300,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns horizontal velocity. If parameter, setter returns this Spacial for chaining functions.
    */
   velocityX (val) {
-    if (!arguments.length) return this.vel.x;
+    if (U.getter(arguments)) return this.vel.x;
     this.velocity(val, this.vel.y);
     return this;
   }
@@ -285,7 +311,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns vertical velocity. If parameter, setter returns this Spacial for chaining functions.
    */
   velocityY (val) {
-    if (!arguments.length) return this.vel.y;
+    if (U.getter(arguments)) return this.vel.y;
     this.velocity(this.vel.x, val);
     return this;
   }
@@ -320,12 +346,23 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns angle in degrees. If parameter, setter returns this Spacial for chaining functions.
    */
   angle (degree, cb) {
-    if (!arguments.length) return U.clampAngle(this.ang);
+    if (U.getter(arguments)) return U.clampAngle(this.ang);
+    const origin = this.ang;
     this.ang = U.clampAngle(degree);
+    const delta = this.ang - origin;
+    for (const vertex of this.vertices) {
+      vertex.rotate(this.pos, delta);
+    }
     if (this.sprite) this.sprite.angle = this.ang;
-    if (this.debug) this.debug.angle = this.ang;
+    if (this.debug) {
+      this.debug.angle = this.ang;
+      for (const i in this.vdebug) {
+        this.vdebug[i].x = this.vertices[i].x;
+        this.vdebug[i].y = this.vertices[i].y;
+      }
+    }
     if (this.lockVelocityToAngle) this.vel.angle(this.ang);
-    if (typeof cb === 'function') cb();
+    if (typeof cb === 'function') cb(this.ang - origin);
     return this;
   }
 
@@ -348,7 +385,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameters, getter returns degree change per tick. If parameters, setter returns this Spacial for chaining functions.
    */
   rotation (degree) {
-    if (!arguments.length) return this.rot;
+    if (U.getter(arguments)) return this.rot;
     this.rot = degree;
     // Cap the rotation to upper and lower bounds
     if (Math.abs(this.rot) > this.maxRotation) this.rotation(this.maxRotation * Math.sign(this.rot));
@@ -383,7 +420,8 @@ export default class Spacial {
    * @return {Vector|Spacial} If no parameters, getter returns scale as Vector. If parameters, setter returns this Spacial for chaining functions.
    */
   scale (xOrVector, y, cb) {
-    if (!arguments.length) return this.scl.copy();
+    if (U.getter(arguments)) return this.scl.copy();
+    const origin = this.scl.copy();
     if (xOrVector instanceof Object) {
       this.scl.x = xOrVector.x;
       this.scl.y = xOrVector.y;
@@ -404,7 +442,7 @@ export default class Spacial {
     if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * Math.sign(this.scl.y);
     if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * Math.sign(this.scl.x);
     if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * Math.sign(this.scl.y);
-    if (typeof cb === 'function') cb();
+    if (typeof cb === 'function') cb(origin.x / this.scl.x, origin.y / this.scl.y);
     return this;
   }
 
@@ -414,7 +452,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns horizontal scale factor. If parameter, setter returns this Spacial for chaining functions.
    */
   scaleX (val) {
-    if (!arguments.length) return this.scl.x;
+    if (U.getter(arguments)) return this.scl.x;
     this.scale(val, this.scl.y);
     return this;
   }
@@ -425,7 +463,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns vertical scale factor. If parameter, setter returns this Spacial for chaining functions.
    */
   scaleY (val) {
-    if (!arguments.length) return this.scl.y;
+    if (U.getter(arguments)) return this.scl.y;
     this.scale(this.scl.x, val);
     return this;
   }
@@ -454,7 +492,7 @@ export default class Spacial {
    * @return {Vector|Spacial} If no parameters, getter returns dilation per tick as Vector. If parameters, setter returns this Spacial for chaining functions.
    */
   dilation (xOrVector, y) {
-    if (!arguments.length) return this.dil.copy();
+    if (U.getter(arguments)) return this.dil.copy();
     if (xOrVector instanceof Object) {
       this.dil.x = xOrVector.x;
       this.dil.y = xOrVector.y;
@@ -471,7 +509,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns horizontal scale factor. If parameter, setter returns this Spacial for chaining functions.
    */
   dilationX (val) {
-    if (!arguments.length) return this.dil.x;
+    if (U.getter(arguments)) return this.dil.x;
     this.dilation(val, this.dil.y);
     return this;
   }
@@ -482,7 +520,7 @@ export default class Spacial {
    * @return {number|Spacial} If no parameter, getter returns vertical scale factor. If parameter, setter returns this Spacial for chaining functions.
    */
   dilationY (val) {
-    if (!arguments.length) return this.dil.y;
+    if (U.getter(arguments)) return this.dil.y;
     this.dilation(this.dil.x, val);
     return this;
   }

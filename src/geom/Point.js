@@ -17,6 +17,10 @@ export default class Point {
   }
 
   // ** --- Point Geometry Math Functions --- ** //
+  equals (point) {
+    return this.x === point.x && this.y === point.y;
+  }
+
   distance (point) {
     const dx = point.x - this.x;
     const dy = point.y - this.y;
@@ -35,7 +39,37 @@ export default class Point {
     return U.toDeg(this.direction(point));
   }
 
+  // Moves the point be an amount
+  translate (translationX, translationY) {
+    this.x += translationX;
+    this.y += translationY;
+  }
+
+  // rotates the point around the pivot by degree
+  rotate (pivot, rotation) {
+    if (this.equals(pivot)) {
+      console.log('circle');
+      return;
+    }
+    const radius = this.distance(pivot);
+    const direction = pivot.direction(this);
+    const nx = Math.cos(U.toRad(rotation) + direction) * radius;
+    const ny = Math.sin(U.toRad(rotation) + direction) * radius;
+    this.x = nx + pivot.x;
+    this.y = ny + pivot.y;
+  }
+
+  // moves the point toward or away from the anchor by scale factor
+  scale (anchor, factorX, factorY) {
+    this.x = (anchor.x - this.x) * (1 + factorX);
+    this.y = (anchor.y - this.y) * (1 + factorY);
+  }
+
   // ** --- Point Utility Functions --- ** //
+  toPoint () {
+    return this;
+  }
+
   toVector () {
     return new Vector(this.x, this.y);
   }

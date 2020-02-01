@@ -1,9 +1,20 @@
 const states = {};
 
 export default {
-
   rectangle: {
-    rectangle: (e, actor, interactor) => { /* no op */ },
+    rectangle: (e, actor, interactor) => {
+      const distance = actor.position().distance(interactor.position());
+      const key = `${actor.id}-${interactor.id}`;
+      const last = states[key] || null;
+      // It's impossible to have a collision at this range
+      if (distance > actor.hypotenus + interactor.hypotenus) {
+        states[key] = 'outside';
+        if (last !== 'outside') e.emit('leave', actor, interactor);
+      } else {
+        states[key] = 'inside';
+        if (last !== 'inside') e.emit('enter', actor, interactor);
+      }
+    },
     circle: (e, actor, interactor) => { /* no op */ }
   },
 

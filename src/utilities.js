@@ -20,9 +20,14 @@ const _uuid = () => {
   });
 };
 
+const _getter = (args) => {
+  return !args.length || !args[0];
+};
+
 export default {
   clampAngle: _clampAngle,
   toDeg: _toDeg,
   toRad: _toRad,
-  uuid: _uuid
+  uuid: _uuid,
+  getter: _getter
 };

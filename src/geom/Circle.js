@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import Spacial from './Spacial';
+import { Point } from '.';
 
 const _defaults = {
   radius: 1
@@ -12,11 +13,11 @@ export default class Circle extends Spacial {
     super(parent, arguments[1]);
     this.radius = radius;
     this.type = 'circle';
+    this.vertices = [new Point()];
   }
 
-  makeDebug (container, color = 0x009900) {
-    if (this.debug) this.container.removeChild(this.debug);
-    super.makeDebug(container);
+  makeDebug (container, color = 0x009900, vcolor = 0x990000) {
+    super.makeDebug(container, color, vcolor);
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);
     gfx.drawCircle(0, 0, this.radius);
