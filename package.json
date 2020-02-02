@@ -19,6 +19,10 @@
     "pixi",
     "physics"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SleepyFish/BogieJS.git"
+  },
   "author": "J Riley Harrington <jrileyharrington@gmail.com>",
   "license": "ISC",
   "devDependencies": {
