@@ -1,6 +1,6 @@
 {
   "name": "bogie",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Collision extension for PIXI.js",
   "main": "dist/bogie.js",
   "np": {
