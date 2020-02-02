@@ -47,10 +47,7 @@ export default class Point {
 
   // rotates the point around the pivot by degree
   rotate (pivot, rotation) {
-    if (this.equals(pivot)) {
-      console.log('circle');
-      return;
-    }
+    if (this.equals(pivot)) return;
     const radius = this.distance(pivot);
     const direction = pivot.direction(this);
     const nx = Math.cos(U.toRad(rotation) + direction) * radius;
@@ -61,8 +58,11 @@ export default class Point {
 
   // moves the point toward or away from the anchor by scale factor
   scale (anchor, factorX, factorY) {
-    this.x = (anchor.x - this.x) * (1 + factorX);
-    this.y = (anchor.y - this.y) * (1 + factorY);
+    if (this.equals(anchor)) return;
+    const dx = this.x - anchor.x;
+    const dy = this.y - anchor.y;
+    this.x += dx * factorX;
+    this.y += dy * factorY;
   }
 
   // ** --- Point Utility Functions --- ** //

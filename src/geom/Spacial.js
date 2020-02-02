@@ -458,6 +458,10 @@ export default class Spacial {
       this.scl.x = xOrVector;
       this.scl.y = y;
     }
+    const delta = this.scl.minus(origin);
+    for (const vertex of this.vertices) {
+      vertex.scale(this.pos, delta.x, delta.y);
+    }
     if (this.sprite) {
       this.sprite.scale.x = this.scl.x;
       this.sprite.scale.y = this.scl.y;
@@ -465,13 +469,17 @@ export default class Spacial {
     if (this.debug) {
       this.debug.scale.x = this.scl.x;
       this.debug.scale.y = this.scl.y;
+      for (const i in this.vdebug) {
+        this.vdebug[i].x = this.vertices[i].x;
+        this.vdebug[i].y = this.vertices[i].y;
+      }
     }
     // Cap the scale factor to upper and lower bounds
     if (Math.abs(this.scl.x) > this.maxSize) this.scl.x = this.maxSize * Math.sign(this.scl.x);
     if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * Math.sign(this.scl.y);
     if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * Math.sign(this.scl.x);
     if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * Math.sign(this.scl.y);
-    if (typeof cb === 'function') cb(origin.x / this.scl.x, origin.y / this.scl.y);
+    if (typeof cb === 'function') cb();
     return this;
   }
 
@@ -506,6 +514,8 @@ export default class Spacial {
   dilate (xOrVector, y) {
     if (xOrVector instanceof Object) {
       this.scale(this.scl.plus(xOrVector));
+    } else if (isNaN(y)) {
+      this.dilate(new Vector(xOrVector, xOrVector));
     } else {
       this.scale(this.scl.x + xOrVector, this.scl.y + y);
     }
@@ -525,6 +535,8 @@ export default class Spacial {
     if (xOrVector instanceof Object) {
       this.dil.x = xOrVector.x;
       this.dil.y = xOrVector.y;
+    } else if (isNaN(y)) {
+      this.dilation(new Vector(xOrVector, xOrVector));
     } else {
       this.dil.x = xOrVector;
       this.dil.y = y;

@@ -65,6 +65,9 @@ window.Bogie.scenes.rectangleCollision = () => {
     actor.makeDebug(null, 0x0000ff);
   }, interactor);
 
+  let growing = true;
+  interactor.dilation(0.005);
+
   // Add Bogie to PIXI app
   const loop = delta => {
     // Reset actor postion if once it gets too far away
@@ -72,6 +75,15 @@ window.Bogie.scenes.rectangleCollision = () => {
       actor.position(new Point(10, 10));
       actor.angle(0);
     }
+
+    if (growing && interactor.scale().x > 1.2) {
+      interactor.dilation(-0.005);
+      growing = false;
+    } else if (!growing && interactor.scale().x < 0.8) {
+      interactor.dilation(0.005);
+      growing = true;
+    }
+
     // Run the Bogie objects that have a run function
     actor.run(delta);
     interactor.run(delta);
