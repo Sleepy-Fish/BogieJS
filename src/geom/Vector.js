@@ -132,7 +132,7 @@ export default class Vector {
 
   // Just read online what dot product of vectors is.
   dot (vector) {
-    return Math.abs(this.magnitude()) * Math.abs(this.magnitude()) * Math.cos(this.direction() - vector.direction());
+    return this.magnitude() * vector.magnitude() * Math.cos(this.direction() - vector.direction());
   }
 
   // ** --- Vector Utility Functions --- ** //

@@ -38,18 +38,4 @@ export default class Rectangle extends Spacial {
     this.container.addChild(this.debug);
     return this;
   }
-
-  project (normal) {
-    let min = Infinity;
-    var max = -Infinity;
-    for (const point of this.vertices) {
-      const dot = point.toVector().dot(normal);
-      min = Math.min(dot, min);
-      max = Math.max(dot, max);
-    }
-    return {
-      min,
-      max
-    };
-  }
 }

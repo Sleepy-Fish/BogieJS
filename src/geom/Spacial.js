@@ -165,6 +165,35 @@ export default class Spacial {
     return this;
   }
 
+  // Collision Related Functions
+
+  axes () {
+    const axes = [];
+    for (let i = 0; i < this.vertices.length; i++) {
+      const n = i + 1 === this.vertices.length ? 0 : i + 1;
+      const p1 = this.vertices[i].toVector();
+      const p2 = this.vertices[n].toVector();
+      const edge = p1.minus(p2);
+      edge.x *= -1;
+      axes.push(edge);
+    }
+    return axes;
+  }
+
+  project (normal) {
+    let min = Infinity;
+    var max = -Infinity;
+    for (const point of this.vertices) {
+      const dot = point.toVector().dot(normal);
+      min = Math.min(dot, min);
+      max = Math.max(dot, max);
+    }
+    return {
+      min,
+      max
+    };
+  }
+
   /**
    * Cleans up any artifacts that could prevent this from being garbage collected.
    */
