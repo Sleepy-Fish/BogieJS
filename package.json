@@ -3,10 +3,6 @@
   "version": "0.0.1",
   "description": "Collision extension for PIXI.js",
   "main": "src/index.js",
-  "np": {
-    "yarn": false,
-    "contents": "dist"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "fix": "eslint --fix ./src",
