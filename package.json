@@ -2,7 +2,11 @@
   "name": "bogie",
   "version": "0.0.2",
   "description": "Collision extension for PIXI.js",
-  "main": "src/index.js",
+  "main": "dist/bogie.js",
+  "np": {
+    "contents": "dist",
+    "tests": false
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 0",
     "fix": "eslint --fix ./src",
