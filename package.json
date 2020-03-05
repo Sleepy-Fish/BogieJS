@@ -11,6 +11,7 @@
     "fix": "eslint --fix ./src",
     "dev": "webpack-dev-server",
     "build": "NODE_ENV=production webpack --mode=production",
+    "docs": "node ./renderDocs.js && webpack --config ./webpack.config.docs.js",
     "patch": "npm run build && np patch",
     "minor": "npm run build && np minor",
     "major": "npm run build && np major"
@@ -27,6 +28,7 @@
   "license": "MIT",
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
+    "doxdox": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.3",
