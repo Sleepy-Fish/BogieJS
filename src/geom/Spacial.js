@@ -32,6 +32,8 @@ export default class Spacial {
    * @param {number} options.maxSize Limit on scale factor regardless of dilation or stretch settings
    * @param {number} options.minSize Limit on scale factor regardless of dilation or stretch settings
    * @param {boolean} options.lockVelocityToAngle When velocity changes direction angle is updated too. Projectile or propulsion movement.
+   * @constructor
+   * @abstract
    */
   constructor (parent = null, {
     maxSpeed = _defaults.maxSpeed,
