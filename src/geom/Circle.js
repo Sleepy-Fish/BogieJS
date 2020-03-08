@@ -9,16 +9,15 @@ const _defaults = {
 export default class Circle extends Spacial {
   /**
    * Class of basic circular shaped spacial
-   * @param {Spacial} parent Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
    * @param {Object} options Base level options for Circle.
-   * @param {number} options.radius Distance from center position to edge of circle
-   * @constructor
+   * @param {number} [options.radius=1] Distance from center position to edge of circle
    * @extends Spacial
+   * @constructor
    */
-  constructor (parent, {
+  constructor ({
     radius = _defaults.radius
   } = _defaults) {
-    super(parent, arguments[1]);
+    super(...arguments);
     this.radius = radius;
     this.type = 'circle';
     this.vertices = [new Point()];

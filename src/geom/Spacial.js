@@ -9,6 +9,7 @@ import * as PIXI from 'pixi.js';
 import { Point, Vector } from '.';
 
 const _defaults = {
+  parent: null,
   maxSpeed: Infinity,
   minSpeed: 0,
   maxRotation: Infinity,
@@ -23,19 +24,20 @@ const _collisionEvents = ['leave', 'enter', 'collide', 'collide-inner', 'collide
 export default class Spacial {
   /**
    * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
-   * @param {Spacial} parent Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
    * @param {Object} options Base level options for Spacial.
-   * @param {number} options.maxSpeed Limit on positions updates per tick regardless of velocity or acceleration settings.
-   * @param {number} options.minSpeed Limit on positions updates per tick regardless of velocity or acceleration settings.
-   * @param {number} options.maxRotation Limit on angle updates per tick regardless of rotation or spin settings.
-   * @param {number} options.minRotation Limit on angle updates per tick regardless of rotation or spin settings.
-   * @param {number} options.maxSize Limit on scale factor regardless of dilation or stretch settings
-   * @param {number} options.minSize Limit on scale factor regardless of dilation or stretch settings
-   * @param {boolean} options.lockVelocityToAngle When velocity changes direction angle is updated too. Projectile or propulsion movement.
+   * @param {Spacial} [options.parent=null] Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
+   * @param {number} [options.maxSpeed=Infinity] Limit on positions updates per tick regardless of velocity or acceleration settings.
+   * @param {number} [options.minSpeed=0] Limit on positions updates per tick regardless of velocity or acceleration settings.
+   * @param {number} [options.maxRotation=Infinity] Limit on angle updates per tick regardless of rotation or spin settings.
+   * @param {number} [options.minRotation=0] Limit on angle updates per tick regardless of rotation or spin settings.
+   * @param {number} [options.maxSize=Infinity] Limit on scale factor regardless of dilation or stretch settings
+   * @param {number} [options.minSize=0] Limit on scale factor regardless of dilation or stretch settings
+   * @param {boolean} [options.lockVelocityToAngle=false] When velocity changes direction angle is updated too. Projectile or propulsion movement.
    * @constructor
    * @abstract
    */
-  constructor (parent = null, {
+  constructor ({
+    parent = _defaults.parent,
     maxSpeed = _defaults.maxSpeed,
     minSpeed = _defaults.minSpeed,
     maxRotation = _defaults.maxRotation,
@@ -138,6 +140,13 @@ export default class Spacial {
     return this;
   }
 
+  /**
+   * Sets an event handler on this Spacial to be fired when interacting with some other set of Spacials.
+   * @param {String} event Event to perform handling on (enter, leave, collide, collide-inner, collide-outer)
+   * @param {Function} cb Callback to perform on collision event
+   * @param {String|Spacial|Spacial[]} [interactor="default"] Spacial(s) or world layer to perform collion handler for
+   * @return {Spacial} Returns this Spacial for chaining functions.
+   */
   on (event, cb, interactor = 'default') {
     if (!_collisionEvents.includes(event)) {
       console.warn(`Unknown event binding: ${event}`);
@@ -153,6 +162,12 @@ export default class Spacial {
     return this;
   }
 
+  /**
+   * Removes an event handler on this Spacial.
+   * @param {String} event Specificvent to remove (enter, leave, collide, collide-inner, collide-outer)
+   * @param {String|Spacial|Spacial[]} [interactor="default"] Spacial(s) or world layer to remove collion handler for
+   * @return {Spacial} Returns this Spacial for chaining functions.
+   */
   off (event, interactor = 'default') {
     if (!_collisionEvents.includes(event)) {
       console.warn(`Unknown event unbinding: ${event}`);
