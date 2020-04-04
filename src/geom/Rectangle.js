@@ -7,14 +7,18 @@ const _defaults = {
   width: 1
 };
 
+/**
+ * Class of basic Rectagular shaped Spacial
+ * @property {number} hypotenus Distance from from one corner to its furthest away opposite corner.
+ * @extends Spacial
+ * @class
+ */
 export default class Rectangle extends Spacial {
   /**
-   * Class of basic circular shaped spacial
+   * Creates Rectangle shaped Spacial
    * @param {Object} options Base level options for Circle.
    * @param {number} [options.height=1] Distance between top and bottom edge of unrotated Rectangle
    * @param {number} [options.width=1] Distance between left and right edge of unrotated Rectangle
-   * @property {number} hypotenus Distance from from one corner to its furthest away opposite corner.
-   * @extends Spacial
    * @constructor
    */
   constructor ({

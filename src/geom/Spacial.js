@@ -21,9 +21,16 @@ const _defaults = {
 
 const _collisionEvents = ['leave', 'enter', 'collide', 'collide-inner', 'collide-outer'];
 
+/**
+ * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
+ * @abstract
+ * @class
+ * @property {boolean} dynamic Determines if this Spacial is effected by transformations per tick
+ * @property {boolean} awake Determines if this Spacial is checking for collisions per tick
+ */
 export default class Spacial {
   /**
-   * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
+   * Extends a class with necessary spacial functions and properties
    * @param {Object} options Base level options for Spacial.
    * @param {Spacial} [options.parent=null] Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
    * @param {number} [options.maxSpeed=Infinity] Limit on positions updates per tick regardless of velocity or acceleration settings.
@@ -34,7 +41,6 @@ export default class Spacial {
    * @param {number} [options.minSize=0] Limit on scale factor regardless of dilation or stretch settings
    * @param {boolean} [options.lockVelocityToAngle=false] When velocity changes direction angle is updated too. Projectile or propulsion movement.
    * @constructor
-   * @abstract
    */
   constructor ({
     parent = _defaults.parent,

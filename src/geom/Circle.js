@@ -6,12 +6,16 @@ const _defaults = {
   radius: 1
 };
 
+/**
+ * Class of basic circular shaped Spacial
+ * @extends Spacial
+ * @class
+ */
 export default class Circle extends Spacial {
   /**
    * Class of basic circular shaped spacial
    * @param {Object} options Base level options for Circle.
    * @param {number} [options.radius=1] Distance from center position to edge of circle
-   * @extends Spacial
    * @constructor
    */
   constructor ({
