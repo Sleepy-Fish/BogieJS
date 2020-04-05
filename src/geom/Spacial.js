@@ -6,7 +6,7 @@
 
 import U from '../utilities';
 import * as PIXI from 'pixi.js';
-import { Point, Vector } from '.';
+import { Point, Vector, Line } from '.';
 
 const _defaults = {
   maxSpeed: Infinity,
@@ -192,6 +192,25 @@ export default class Spacial {
       min,
       max
     };
+  }
+
+  edges () {
+    const edges = [];
+    if (this.vertices.length < 3) return edges;
+    for (let i = 1; i < this.vertices.length; i++) {
+      edges.push(new Line(this.vertices[i - 1], this.vertices[i]));
+    }
+    edges.push(new Line(this.vertices[this.vertices.length - 1], this.vertices[0]));
+    return edges;
+  }
+
+  contains (point) {
+    let cross = 0;
+    const cast = new Line(point, new Point(Infinity, point.y));
+    for (const edge in this.edges()) {
+      if (cast.crosses(edge)) cross++;
+    }
+    return cross % 2 === 1;
   }
 
   /**
