@@ -58,6 +58,10 @@ export default class Vector {
   }
 
   // ** --- Vector Arithmatic Functions --- ** //
+  equals (vector) {
+    return this.x === vector.x && this.y === vector.y;
+  }
+
   // ADDITION - Accepts vector and adds x and y respectively
   plus (vector) {
     return new Vector(this.x + vector.x, this.y + vector.y);
