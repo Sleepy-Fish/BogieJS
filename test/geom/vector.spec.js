@@ -82,4 +82,31 @@ describe('Vector', function () {
       assert.strictEqual(Vector.One().dot(Vector.One()), 2);
     });
   });
+  // ** --- Vector Utility Functions --- ** //
+  describe('vector utility', function () {
+    it('should convert to Point', function () {
+      const vector = Vector.One();
+      assert.strictEqual(vector.constructor.name, 'Vector');
+      const point = vector.toPoint();
+      assert.strictEqual(point.constructor.name, 'Point');
+      assert(vector.equals(point));
+    });
+    it('should convert to JSON', function () {
+      const vector = Vector.One();
+      assert.strictEqual(vector.constructor.name, 'Vector');
+      const json = vector.json();
+      assert.strictEqual(json.constructor.name, 'Object');
+      assert(vector.equals(json));
+    });
+    it('should print as string', function () {
+      const vector = new Vector(12, 34);
+      assert.strictEqual(`${vector}`, 'Vector[12, 34]');
+    });
+    it('should make equivelant but non-reference equal copy', function () {
+      const vector = new Vector(12, 34);
+      const copy = vector.copy();
+      assert.notStrictEqual(vector, copy);
+      assert(vector.equals(copy));
+    });
+  });
 });

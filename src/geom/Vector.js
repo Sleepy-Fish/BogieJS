@@ -45,7 +45,6 @@ export default class Vector {
 
   // In Degrees
   angle (degrees) {
-    // Do not use fixed precision correction before degree conversion as accuracy is lost
     if (U.getter(arguments)) return U.toDeg(Math.atan2(this.y, this.x));
     return this.direction(U.toRad(degrees));
   }
