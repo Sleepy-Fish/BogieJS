@@ -1,17 +1,17 @@
 const assert = require('assert');
+const U = require('../../src/utilities').default;
 const Vector = require('../../src/geom/Vector').default;
 
 describe('Vector', function () {
-  describe('direction', function () {
+  // ** --- Vector Property Getters / Setters --- ** //
+  describe('vector properties', function () {
     it('should get and set radian directions correctly', function () {
       const vector = Vector.One();
-      const expected = Math.atan2(1, 1);
+      const expected = U.fix(Math.atan2(2, 2));
       assert.strictEqual(vector.direction(), expected);
       vector.direction(0.25);
       assert.strictEqual(vector.direction(), 0.25);
     });
-  });
-  describe('angle', function () {
     it('should get and set degree angles correctly', function () {
       const vector = Vector.One();
       const expected = 45;
@@ -19,8 +19,6 @@ describe('Vector', function () {
       vector.angle(90);
       assert.strictEqual(vector.angle(), 90);
     });
-  });
-  describe('magnitude', function () {
     it('should get and set magnitude correctly', function () {
       const vector = Vector.One();
       const expected = Math.sqrt(2);
@@ -28,7 +26,7 @@ describe('Vector', function () {
     });
   });
   // ** --- Vector Arithmatic Functions --- ** //
-  describe('plus', function () {
+  describe('vector arithmatic', function () {
     it('should add vectors', function () {
       let vector = Vector.One();
       vector = vector.plus(Vector.Left());
@@ -36,14 +34,52 @@ describe('Vector', function () {
       vector.plusEquals(Vector.Up());
       assert(vector.equals(Vector.Zero()));
     });
-  });
-  describe('minus', function () {
     it('should subtract vectors', function () {
       let vector = Vector.One();
       vector = vector.minus(Vector.Right());
       assert(vector.equals(Vector.Down()));
       vector.minusEquals(Vector.Down());
       assert(vector.equals(Vector.Zero()));
+    });
+    it('should multiply vector by scalar', function () {
+      let vector = Vector.One();
+      vector = vector.times(5);
+      assert(vector.equals(new Vector(5, 5)));
+      vector.timesEquals(2);
+      assert(vector.equals(new Vector(10, 10)));
+    });
+    it('should divide vector by scalar', function () {
+      let vector = new Vector(16, 16);
+      vector = vector.over(4);
+      assert(vector.equals(new Vector(4, 4)));
+      vector.overEquals(4);
+      assert(vector.equals(Vector.One()));
+    });
+  });
+  // ** --- Vector Geometry Math Functions --- ** //
+  describe('vector geometry', function () {
+    it('should rotate vector', function () {
+      const vector = Vector.Up();
+      // rotate original vector
+      assert(vector.rotate(90).equals(Vector.Right()));
+      // create rotated copy of vector
+      assert(vector.rotation(90).equals(Vector.Down()));
+      // ensure last step did not effect original
+      assert(vector.equals(Vector.Right()));
+    });
+    it('should normalize vector', function () {
+      const vector = new Vector(2, 3);
+      const normal = vector.normal();
+      assert(normal.magnitude(), 1);
+      assert(normal.direction(), vector.direction());
+      vector.normalize();
+      assert(normal.equals(vector));
+    });
+    it('should find dot product of vector', function () {
+      assert.strictEqual(Vector.One().dot(Vector.Zero()), 0);
+      assert.strictEqual(Vector.One().dot(Vector.Left()), -1);
+      assert.strictEqual(Vector.One().dot(Vector.Right()), 1);
+      assert.strictEqual(Vector.One().dot(Vector.One()), 2);
     });
   });
 });

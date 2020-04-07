@@ -35,17 +35,18 @@ export default class Vector {
 
   // In Radians
   direction (radians) {
-    if (U.getter(arguments)) return Math.atan2(this.y, this.x);
+    if (U.getter(arguments)) return U.fix(Math.atan2(this.y, this.x));
     const magnitude = this.magnitude();
     if (magnitude === 0) console.warn('Setting direction or angle on zero vector not advisable.');
-    this.x = Math.cos(radians) * magnitude;
-    this.y = Math.sin(radians) * magnitude;
+    this.x = U.fix(Math.cos(radians) * magnitude);
+    this.y = U.fix(Math.sin(radians) * magnitude);
     return this;
   }
 
   // In Degrees
   angle (degrees) {
-    if (U.getter(arguments)) return U.toDeg(this.direction());
+    // Do not use fixed precision correction before degree conversion as accuracy is lost
+    if (U.getter(arguments)) return U.toDeg(Math.atan2(this.y, this.x));
     return this.direction(U.toRad(degrees));
   }
 
@@ -110,8 +111,7 @@ export default class Vector {
   // Rotates this vector by a degree without effecting magnitude
   rotate (degree) {
     const r = this.angle();
-    this.angle(r + degree);
-    return this;
+    return this.angle(r + degree);
   }
 
   // Returns a new vector with applied degree rotation without effecting magnitude
@@ -136,7 +136,7 @@ export default class Vector {
 
   // Just read online what dot product of vectors is.
   dot (vector) {
-    return this.magnitude() * vector.magnitude() * Math.cos(this.direction() - vector.direction());
+    return U.fix(this.magnitude() * vector.magnitude() * Math.cos(this.direction() - vector.direction()));
   }
 
   // ** --- Vector Utility Functions --- ** //

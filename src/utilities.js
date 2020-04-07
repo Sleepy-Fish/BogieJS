@@ -1,9 +1,15 @@
+import C from './constants';
+
 const _toDeg = (rad) => {
   return _clampAngle(rad * (180 / Math.PI));
 };
 
 const _toRad = (deg) => {
   return deg * (Math.PI / 180);
+};
+
+const _fix = (value) => {
+  return Number(value.toFixed(C.PRECISION));
 };
 
 const _clampAngle = (angle) => {
@@ -28,6 +34,7 @@ export default {
   clampAngle: _clampAngle,
   toDeg: _toDeg,
   toRad: _toRad,
+  fix: _fix,
   uuid: _uuid,
   getter: _getter
 };
