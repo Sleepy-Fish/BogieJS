@@ -17,7 +17,8 @@ export default class Point {
   }
 
   // ** --- Point Geometry Math Functions --- ** //
-  equals (point) {
+  equals (point, precision = null) {
+    if (precision) return U.fix(this.x, precision) === U.fix(point.x, precision) && U.fix(this.y, precision) === U.fix(point.y, precision);
     return this.x === point.x && this.y === point.y;
   }
 
@@ -50,8 +51,9 @@ export default class Point {
     if (this.equals(pivot)) return;
     const radius = this.distance(pivot);
     const direction = pivot.direction(this);
-    const nx = Math.cos(U.toRad(rotation) + direction) * radius;
-    const ny = Math.sin(U.toRad(rotation) + direction) * radius;
+    const rads = U.toRad(rotation);
+    const nx = Math.cos(rads + direction) * radius;
+    const ny = Math.sin(rads + direction) * radius;
     this.x = nx + pivot.x;
     this.y = ny + pivot.y;
   }

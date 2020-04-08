@@ -35,11 +35,11 @@ export default class Vector {
 
   // In Radians
   direction (radians) {
-    if (U.getter(arguments)) return U.fix(Math.atan2(this.y, this.x));
+    if (U.getter(arguments)) return Math.atan2(this.y, this.x);
     const magnitude = this.magnitude();
     if (magnitude === 0) console.warn('Setting direction or angle on zero vector not advisable.');
-    this.x = U.fix(Math.cos(radians) * magnitude);
-    this.y = U.fix(Math.sin(radians) * magnitude);
+    this.x = Math.cos(radians) * magnitude;
+    this.y = Math.sin(radians) * magnitude;
     return this;
   }
 
@@ -58,7 +58,8 @@ export default class Vector {
   }
 
   // ** --- Vector Arithmatic Functions --- ** //
-  equals (vector) {
+  equals (vector, precision = null) {
+    if (precision) return U.fix(this.x, precision) === U.fix(vector.x, precision) && U.fix(this.y, precision) === U.fix(vector.y, precision);
     return this.x === vector.x && this.y === vector.y;
   }
 
@@ -135,7 +136,7 @@ export default class Vector {
 
   // Just read online what dot product of vectors is.
   dot (vector) {
-    return U.fix(this.magnitude() * vector.magnitude() * Math.cos(this.direction() - vector.direction()));
+    return this.magnitude() * vector.magnitude() * Math.cos(this.direction() - vector.direction());
   }
 
   // ** --- Vector Utility Functions --- ** //

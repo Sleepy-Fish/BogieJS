@@ -7,7 +7,7 @@ describe('Vector', function () {
   describe('vector properties', function () {
     it('should get and set radian directions correctly', function () {
       const vector = Vector.One();
-      const expected = U.fix(Math.atan2(2, 2));
+      const expected = Math.atan2(2, 2);
       assert.strictEqual(vector.direction(), expected);
       vector.direction(0.25);
       assert.strictEqual(vector.direction(), 0.25);
@@ -61,11 +61,11 @@ describe('Vector', function () {
     it('should rotate vector', function () {
       const vector = Vector.Up();
       // rotate original vector
-      assert(vector.rotate(90).equals(Vector.Right()));
+      assert(vector.rotate(90).equals(Vector.Right(), 14));
       // create rotated copy of vector
-      assert(vector.rotation(90).equals(Vector.Down()));
+      assert(vector.rotation(90).equals(Vector.Down(), 14));
       // ensure last step did not effect original
-      assert(vector.equals(Vector.Right()));
+      assert(vector.equals(Vector.Right(), 14));
     });
     it('should normalize vector', function () {
       const vector = new Vector(2, 3);
@@ -76,10 +76,10 @@ describe('Vector', function () {
       assert(normal.equals(vector));
     });
     it('should find dot product of vector', function () {
-      assert.strictEqual(Vector.One().dot(Vector.Zero()), 0);
-      assert.strictEqual(Vector.One().dot(Vector.Left()), -1);
-      assert.strictEqual(Vector.One().dot(Vector.Right()), 1);
-      assert.strictEqual(Vector.One().dot(Vector.One()), 2);
+      assert.strictEqual(U.fix(Vector.One().dot(Vector.Zero())), 0);
+      assert.strictEqual(U.fix(Vector.One().dot(Vector.Left())), -1);
+      assert.strictEqual(U.fix(Vector.One().dot(Vector.Right())), 1);
+      assert.strictEqual(U.fix(Vector.One().dot(Vector.One())), 2);
     });
   });
   // ** --- Vector Utility Functions --- ** //

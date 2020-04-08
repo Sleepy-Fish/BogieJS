@@ -1,3 +1,3 @@
 export default {
-  PRECISION: 14
+  PRECISION: 10
 };

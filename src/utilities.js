@@ -8,8 +8,8 @@ const _toRad = (deg) => {
   return deg * (Math.PI / 180);
 };
 
-const _fix = (value) => {
-  return Number(value.toFixed(C.PRECISION));
+const _fix = (value, precision = C.PRECISION) => {
+  return Number(value.toFixed(precision));
 };
 
 const _clampAngle = (angle) => {
@@ -26,6 +26,10 @@ const _uuid = () => {
   });
 };
 
+const _rndBetween = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
 const _getter = (args) => {
   return !args.length || !args[0];
 };
@@ -36,5 +40,6 @@ export default {
   toRad: _toRad,
   fix: _fix,
   uuid: _uuid,
+  rndBetween: _rndBetween,
   getter: _getter
 };
