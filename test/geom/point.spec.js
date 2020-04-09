@@ -43,8 +43,8 @@ describe('Point', function () {
       const value = U.rndBetween(1, 100);
       const hori = new Point(value, 0);
       const vert = new Point(0, value);
-      const half = Math.sqrt((value * value) / 2);
-      const square = new Point(half, half);
+      const edge = Math.sqrt((value * value) / 2);
+      const square = new Point(edge, edge);
       const point = hori.copy();
       assert(point.equals(hori, 12));
       point.rotate(pivot, 45);
