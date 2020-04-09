@@ -115,7 +115,7 @@ describe('Line', function () {
       assert(!line.contains(point));
     });
     it('should determine if line crosses another line', function () {
-      const edge = U.rndBetween(1, 100);
+      const edge = U.rndBetween(3, 100);
       const line = new Line(Point.Zero(), new Point(edge, edge));
       // Perpendicular intersection at the halfway point //
       let intersection = line.crosses(new Line(new Point(0, edge), new Point(edge, 0)));
@@ -129,7 +129,7 @@ describe('Line', function () {
       intersection = line.crosses(new Line(new Point(edge / 2, 1), new Point(edge, (edge / 2))));
       assert(!intersection);
       // Parellel coincident lines (on top of each other) //
-      intersection = line.crosses(new Line(new Point(edge - 2, edge - 2), new Point(edge * 2, edge * 2)));
+      intersection = line.crosses(new Line(new Point(edge - 2, edge - 2), new Point(edge * 2, edge * 2)), 12);
       assert.strictEqual(intersection.constructor.name, 'Boolean');
       assert(intersection);
       // Perpendicular end-point intersection //

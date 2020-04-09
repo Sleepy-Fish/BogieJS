@@ -68,19 +68,24 @@ export default class Line {
   }
 
   // if point exists along line
-  contains (point) {
-    const sumOfDistance = this.start().distance(point) + this.end().distance(point);
-    return sumOfDistance === this.length() && this.direction() === this.start().direction(point);
+  contains (point, precision = null) {
+    let sumOfDistance = this.start().distance(point) + this.end().distance(point);
+    let length = this.length();
+    if (precision) {
+      sumOfDistance = U.fix(sumOfDistance, precision);
+      length = U.fix(length, precision);
+    }
+    return sumOfDistance === length && this.direction() === this.start().direction(point);
   }
 
   // If crosses line
   // This is largely flattened linear math and is a bit hard to follow the logic of in line.
   // For full explaination on this function: https://observablehq.com/@toja/line-box-intersection
-  crosses (line) {
+  crosses (line, precision = null) {
     // Find shared denominator of both linear equations
     const d = (this.p1.x - this.p2.x) * (line.p1.y - line.p2.y) - (this.p1.y - this.p2.y) * (line.p1.x - line.p2.x);
     // If denominator is zero it implies lines are parellel so check if lines are coincident
-    if (d === 0) return this.contains(line.p1) || this.contains(line.p2);
+    if (d === 0) return this.contains(line.p1, precision) || this.contains(line.p2, precision);
     // Bezier coefficient for both lines
     const t = ((this.p1.x - line.p1.x) * (line.p1.y - line.p2.y) - (this.p1.y - line.p1.y) * (line.p1.x - line.p2.x)) / d;
     const u = -((this.p1.x - this.p2.x) * (this.p1.y - line.p1.y) - (this.p1.y - this.p2.y) * (this.p1.x - line.p1.x)) / d;

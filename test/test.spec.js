@@ -1,9 +1,9 @@
 describe('Bogie Tests', function () {
   before(function () {
-    console.log('Starting Tests');
+    console.info('Starting Tests');
   });
   after(function () {
-    console.log('All Unit Tests Complete');
+    console.info('All Unit Tests Complete');
   });
   describe('Unit Tests', function () {
     require('./geom');
