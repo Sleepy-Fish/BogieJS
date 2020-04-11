@@ -1,4 +1,15 @@
-import C from './constants';
+import C, { levels, colors } from './constants';
+
+const _log = (msg, level = levels.INFO) => {
+  let key = null;
+  if (typeof (level) === 'string') {
+    key = level.toUpperCase();
+    level = levels[key];
+  } else {
+    key = Object.keys(levels).find(k => levels[k] === level);
+  }
+  if (level >= C.LEVEL) console.info(colors[key], `${key}:`, msg);
+};
 
 const _toDeg = (rad) => {
   return _clampAngle(rad * (180 / Math.PI));
@@ -35,6 +46,7 @@ const _getter = (args) => {
 };
 
 export default {
+  log: _log,
   clampAngle: _clampAngle,
   toDeg: _toDeg,
   toRad: _toRad,

@@ -67,6 +67,7 @@ export default class Spacial {
     if (maxSpeed < minSpeed) throw Error(`maxSpeed (${maxSpeed}) cannot be lower than minSpeed (${minSpeed})`);
     this.maxSpeed = maxSpeed; // Upper bound +/- velocity at this value
     this.minSpeed = minSpeed; // Lower bound +/- velocity at this value
+    if (minSpeed !== 0) this.velocity(Vector.Zero());
     if (maxRotation < minRotation) throw Error(`maxRotation (${maxRotation}) cannot be lower than minRotation (${minRotation})`);
     this.maxRotation = maxRotation; // Upper bound +/- rotation at this value
     this.minRotation = minRotation; // Lower bound +/- rotation at this value
@@ -236,7 +237,7 @@ export default class Spacial {
       this.rotate(this.rot);
       this.dilate(this.dil);
     }
-    if (this.awake) {
+    if (this.awake && this.watchers) {
       for (const watcher of Object.values(this.watchers)) watcher.run(delta);
     }
   }

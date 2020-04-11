@@ -4,7 +4,7 @@ const Point = require('../../src/geom/Point').default;
 
 describe('Point', function () {
   // ** --- Point Geometry Math Functions --- ** //
-  describe('point geometry', function () {
+  describe('geometry', function () {
     it('should find distance between two points', function () {
       const center = Point.Zero();
       const hori = new Point(10, 0);
@@ -68,7 +68,7 @@ describe('Point', function () {
     });
   });
   // ** --- Point Utility Functions --- ** //
-  describe('point utility', function () {
+  describe('utility', function () {
     it('should convert to Vector', function () {
       const point = new Point(1, 1);
       assert.strictEqual(point.constructor.name, 'Point');

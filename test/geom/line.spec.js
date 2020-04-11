@@ -4,7 +4,7 @@ const Point = require('../../src/geom/Point').default;
 const Line = require('../../src/geom/Line').default;
 
 describe('Line', function () {
-  describe('line properties', function () {
+  describe('properties', function () {
     it('should get and set start point correctly', function () {
       const line = new Line(Point.Zero(), new Point(10, 10));
       const expected = new Point(5, 5);
@@ -72,7 +72,7 @@ describe('Line', function () {
     });
   });
   // ** --- Line Geometry Math Functions --- ** //
-  describe('line geometry', function () {
+  describe('geometry', function () {
     it('should find the direction in radians of a line', function () {
       const hori = new Line(Point.Zero(), new Point(10, 0));
       const vert = new Line(Point.Zero(), new Point(0, 10));
@@ -143,7 +143,7 @@ describe('Line', function () {
     });
   });
   // ** --- Line Utility Functions --- ** //
-  describe('line utility', function () {
+  describe('utility', function () {
     it('should convert to JSON', function () {
       const line = new Line(new Point(1, 2), new Point(3, 4));
       assert.strictEqual(line.constructor.name, 'Line');
