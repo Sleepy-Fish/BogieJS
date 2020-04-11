@@ -37,7 +37,7 @@ export default class Vector {
   direction (radians) {
     if (U.getter(arguments)) return Math.atan2(this.y, this.x);
     const magnitude = this.magnitude();
-    if (magnitude === 0) console.warn('Setting direction or angle on zero vector not advisable.');
+    if (magnitude === 0) U.log('Setting direction or angle on zero vector not advisable.', 'warn');
     this.x = Math.cos(radians) * magnitude;
     this.y = Math.sin(radians) * magnitude;
     return this;
@@ -59,8 +59,11 @@ export default class Vector {
 
   // ** --- Vector Arithmatic Functions --- ** //
   equals (vector, precision = null) {
-    if (precision) return U.fix(this.x, precision) === U.fix(vector.x, precision) && U.fix(this.y, precision) === U.fix(vector.y, precision);
-    return this.x === vector.x && this.y === vector.y;
+    const value = precision
+      ? U.fix(this.x, precision) === U.fix(vector.x, precision) && U.fix(this.y, precision) === U.fix(vector.y, precision)
+      : this.x === vector.x && this.y === vector.y;
+    U.log(`${this.toPoint()} equals ${vector.toString()} (${precision || ''}): ${value}`, 'debug');
+    return value;
   }
 
   // ADDITION - Accepts vector and adds x and y respectively

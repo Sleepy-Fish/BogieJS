@@ -18,8 +18,11 @@ export default class Point {
 
   // ** --- Point Geometry Math Functions --- ** //
   equals (point, precision = null) {
-    if (precision) return U.fix(this.x, precision) === U.fix(point.x, precision) && U.fix(this.y, precision) === U.fix(point.y, precision);
-    return this.x === point.x && this.y === point.y;
+    const value = precision
+      ? U.fix(this.x, precision) === U.fix(point.x, precision) && U.fix(this.y, precision) === U.fix(point.y, precision)
+      : this.x === point.x && this.y === point.y;
+    U.log(`${this.toString()} equals ${point.toString()} (${precision || ''}): ${value}`, 'verbose');
+    return value;
   }
 
   distance (point) {

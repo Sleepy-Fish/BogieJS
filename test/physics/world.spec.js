@@ -1,9 +1,17 @@
-const assert = require('assert');
+const { JSDOM } = require('jsdom');
+const { window } = new JSDOM();
+global.window = window;
+global.document = window.document;
+
+const U = require('../test.utilities').default;
+const Geom = require('../../src/geom');
+const Physics = require('../../src/physics');
 
 describe('Array', function () {
-  describe('#indexOf()', function () {
-    it('should return -1 when the value is not present', function () {
-      assert.strictEqual('world'.indexOf('l'), 3);
+  describe('unimplement', function () {
+    it('should do anything', function () {
+      U.log(Geom);
+      U.log(Physics);
     });
   });
 });

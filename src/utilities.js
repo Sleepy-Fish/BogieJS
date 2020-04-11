@@ -37,12 +37,8 @@ const _uuid = () => {
   });
 };
 
-const _rndBetween = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
 const _getter = (args) => {
-  return !args.length || !args[0];
+  return !args.length || typeof args[0] === 'undefined';
 };
 
 export default {
@@ -52,6 +48,5 @@ export default {
   toRad: _toRad,
   fix: _fix,
   uuid: _uuid,
-  rndBetween: _rndBetween,
   getter: _getter
 };

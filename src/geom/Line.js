@@ -110,6 +110,6 @@ export default class Line {
   }
 
   copy () {
-    return new Line(this.p1, this.p2);
+    return new Line(this.p1.copy(), this.p2.copy());
   }
 }

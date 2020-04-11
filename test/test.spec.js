@@ -1,9 +1,11 @@
+import U from '../src/utilities';
+
 describe('Bogie Tests', function () {
   before(function () {
-    console.info('Starting Tests');
+    U.log('Starting Tests', 'info');
   });
   after(function () {
-    console.info('All Unit Tests Complete');
+    U.log('All Unit Tests Complete', 'info');
   });
   describe('Unit Tests', function () {
     require('./geom');

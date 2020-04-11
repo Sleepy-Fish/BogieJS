@@ -1,4 +1,3 @@
-
 export const levels = {
   VERBOSE: 0,
   DEBUG: 1,
@@ -16,6 +15,6 @@ export const colors = {
 };
 
 export default {
-  LEVEL: levels.DEBUG,
+  LEVEL: levels.INFO,
   PRECISION: 10
 };

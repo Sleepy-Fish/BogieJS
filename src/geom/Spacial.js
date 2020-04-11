@@ -139,11 +139,11 @@ export default class Spacial {
 
   on (event, cb, interactor = 'default') {
     if (!_collisionEvents.includes(event)) {
-      console.warn(`Unknown event binding: ${event}`);
+      U.log(`Unknown event binding: ${event}`, 'warn');
       return;
     }
     if (!this.world) {
-      console.warn('Must call `makeCollidable` before binding collision events');
+      U.log('Must call `makeCollidable` before binding collision events', 'warn');
       return;
     }
     const id = this.world.getId(interactor);
@@ -154,11 +154,11 @@ export default class Spacial {
 
   off (event, interactor = 'default') {
     if (!_collisionEvents.includes(event)) {
-      console.warn(`Unknown event unbinding: ${event}`);
+      U.log(`Unknown event unbinding: ${event}`, 'warn');
       return;
     }
     if (!this.world) {
-      console.warn('Must call `makeCollidable` before unbinding collision events');
+      U.log('Must call `makeCollidable` before unbinding collision events', 'warn');
       return;
     }
     const id = this.world.getId(interactor);
@@ -314,11 +314,10 @@ export default class Spacial {
    */
   shift (xOrVector, y) {
     if (xOrVector instanceof Object) {
-      this.position(this.pos.x + xOrVector.x, this.pos.y + xOrVector.y);
+      return this.position(this.pos.x + xOrVector.x, this.pos.y + xOrVector.y);
     } else {
-      this.position(this.pos.x + xOrVector, this.pos.y + y);
+      return this.position(this.pos.x + xOrVector, this.pos.y + y);
     }
-    return this;
   }
 
   /**
