@@ -6,16 +6,34 @@ const _defaults = {
   radius: 1
 };
 
+/**
+ * Class of basic circular shaped Spacial
+ * @extends Spacial
+ * @class
+ */
 export default class Circle extends Spacial {
-  constructor (parent, {
+  /**
+   * Class of basic circular shaped spacial
+   * @param {Object} options Base level options for Circle.
+   * @param {number} [options.radius=1] Distance from center position to edge of circle
+   * @constructor
+   */
+  constructor ({
     radius = _defaults.radius
   } = _defaults) {
-    super(parent, arguments[1]);
+    super(...arguments);
     this.radius = radius;
     this.type = 'circle';
     this.vertices = [new Point()];
   }
 
+  /**
+   * Creates a simple outline of the collision area of the circle rendered by PIXI.js
+   * @param {PIXI.Container} container What to PIXI container to draw the debug circle onto.
+   * @param {octal} color Color to make debug circle
+   * @param {octal} vcolor Color to make center point of circle
+   * @return {Circle} Returns this Circle for chaining functions.
+   */
   makeDebug (container, color = 0x009900, vcolor = 0x990000) {
     super.makeDebug(container, color, vcolor);
     const gfx = new PIXI.Graphics();

@@ -11,6 +11,7 @@
     "fix": "eslint --fix ./src",
     "dev": "webpack-dev-server",
     "build": "NODE_ENV=production webpack --mode=production",
+    "docs": "NODE_ENV=production webpack --config ./webpack.config.docs.js --mode=production && node ./renderDocs.js",
     "patch": "npm run build && np patch",
     "minor": "npm run build && np minor",
     "major": "npm run build && np major"
@@ -31,6 +32,10 @@
     "@babel/register": "^7.9.0",
     "canvas": "^2.6.1",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "doxdox": "^3.0.0",
+    "doxdox-parser-sleepyfish": "git://github.com/Sleepy-Fish/doxdox-parser-sleepyfish.git#master",
+    "doxdox-plugin-bogie": "git://github.com/Sleepy-Fish/doxdox-plugin-bogie.git#master",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.3",
@@ -52,6 +57,6 @@
     "pixi.js": "^5.2.0"
   },
   "dependencies": {
-    "pixi.js": "^5.2.0"
+    "pixi.js": "^5.2.1"
   }
 }

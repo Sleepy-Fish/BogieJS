@@ -7,12 +7,25 @@ const _defaults = {
   width: 1
 };
 
+/**
+ * Class of basic Rectagular shaped Spacial
+ * @property {number} hypotenus Distance from from one corner to its furthest away opposite corner.
+ * @extends Spacial
+ * @class
+ */
 export default class Rectangle extends Spacial {
-  constructor (parent, {
+  /**
+   * Creates Rectangle shaped Spacial
+   * @param {Object} options Base level options for Circle.
+   * @param {number} [options.height=1] Distance between top and bottom edge of unrotated Rectangle
+   * @param {number} [options.width=1] Distance between left and right edge of unrotated Rectangle
+   * @constructor
+   */
+  constructor ({
     height = _defaults.height,
     width = _defaults.width
   } = _defaults) {
-    super(parent, arguments[1]);
+    super(...arguments);
     this.height = height;
     this.width = width;
     this.hypotenus = Math.sqrt(height * width);
@@ -27,6 +40,13 @@ export default class Rectangle extends Spacial {
     this.type = 'rectangle';
   }
 
+  /**
+   * Creates a simple outline of the collision area of the Rectangle rendered by PIXI.js
+   * @param {PIXI.Container} container What to PIXI container to draw the debug Rectangle onto.
+   * @param {octal} color Color to render debug Rectangle
+   * @param {octal} vcolor Color to render the vertex points of the Rectangle
+   * @return {Circle} Returns this Rectangle for chaining functions.
+   */
   makeDebug (container, color = 0x009900, vcolor = 0x990000) {
     super.makeDebug(container, color, vcolor);
     const gfx = new PIXI.Graphics();
