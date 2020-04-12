@@ -70,7 +70,7 @@ describe('Spacial', function () {
       const maxSpeed = U.rndBetween(2, 10);
       const travel = Math.sqrt((maxSpeed * maxSpeed) / 2);
       const expected = new Geom.Point(travel, travel);
-      const spacial = new Spacial(null, {
+      const spacial = new Spacial({
         maxSpeed
       })
         .position(Geom.Point.Zero())
@@ -84,7 +84,7 @@ describe('Spacial', function () {
       // intentionally underkill
       const vel = new Geom.Vector.One();
       const minSpeed = U.rndBetween(5, 15);
-      const spacial = new Spacial(null, {
+      const spacial = new Spacial({
         minSpeed
       })
         .position(Geom.Point.Zero());
@@ -158,7 +158,7 @@ describe('Spacial', function () {
       // intentionally overkill
       const rot = 90;
       const maxRotation = U.rndBetween(2, 10);
-      const spacial = new Spacial(null, {
+      const spacial = new Spacial({
         maxRotation
       })
         .angle(0)
@@ -175,7 +175,7 @@ describe('Spacial', function () {
       // intentionally underkill
       const rot = 1
       const minRotation = U.rndBetween(5, 15);
-      const spacial = new Spacial(null, {
+      const spacial = new Spacial({
         minRotation
       })
         .angle(0)
@@ -257,7 +257,7 @@ describe('Spacial', function () {
       // intentionally overkill
       const scl = new Geom.Vector(1000, 1000);
       const maxSize = U.rndBetween(2, 10);
-      const spacial = new Spacial(null, {
+      const spacial = new Spacial({
         maxSize
       })
         .scale(Geom.Vector.One())
@@ -269,7 +269,7 @@ describe('Spacial', function () {
     it('should not dilate less than minSize', function () {
       // intentionally underkill
       const minSize = U.rndBetween(3, 8);
-      const spacial = new Spacial(null, {
+      const spacial = new Spacial({
         minSize
       })
         .scale(Geom.Vector.One());
