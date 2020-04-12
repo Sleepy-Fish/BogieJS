@@ -4,6 +4,7 @@ const doxdox = require('doxdox');
 // Globbing doesnt work on linux... boo.
 const classes = [
   'src/geom/Circle.js',
+  'src/geom/Line.js',
   'src/geom/Point.js',
   'src/geom/Rectangle.js',
   'src/geom/Spacial.js',
@@ -13,7 +14,7 @@ const classes = [
 
 doxdox.parseFiles(classes, {
   parser: 'sleepyfish',
-  layout: 'bogie'
+  layout: 'json'
 }).then(content => {
-  fs.writeFileSync('./dist/index.html', content);
+  fs.writeFileSync('./dist/docs.json', JSON.stringify(content, null, 2));
 });

@@ -4,21 +4,31 @@
   "description": "Collision extension for PIXI.js",
   "main": "src/index.js",
   "np": {
-    "tests": false
+    "anyBranch": false,
+    "cleanup": true,
+    "tests": true,
+    "publish": true,
+    "contents": ".",
+    "releaseDraft": true
   },
   "scripts": {
     "test": "mocha --require @babel/register --preset babel ./test",
     "fix": "eslint --fix ./src",
     "dev": "webpack-dev-server",
-    "build": "NODE_ENV=production webpack --mode=production",
-    "docs": "NODE_ENV=production webpack --config ./webpack.config.docs.js --mode=production && node ./renderDocs.js",
+    "build": "NODE_ENV=production webpack --mode=production && npm run docs",
+    "docs": "node ./generateDocs.js",
     "patch": "npm run build && np patch",
     "minor": "npm run build && np minor",
     "major": "npm run build && np major"
   },
   "keywords": [
     "pixi",
-    "physics"
+    "physics",
+    "geometry",
+    "collision",
+    "engine",
+    "game",
+    "web"
   ],
   "repository": {
     "type": "git",
@@ -35,7 +45,7 @@
     "copy-webpack-plugin": "^5.1.1",
     "doxdox": "^3.0.0",
     "doxdox-parser-sleepyfish": "git://github.com/Sleepy-Fish/doxdox-parser-sleepyfish.git#master",
-    "doxdox-plugin-bogie": "git://github.com/Sleepy-Fish/doxdox-plugin-bogie.git#master",
+    "doxdox-plugin-json": "git://github.com/Sleepy-Fish/doxdox-plugin-json.git#master",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.3",
