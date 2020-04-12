@@ -1,3 +1,4 @@
+import U from '../utilities';
 import collisions from './collisions';
 import { EventEmitter } from 'events';
 
@@ -54,14 +55,14 @@ export default class World {
     const watcher = new EventEmitter();
     watcher.id = this.getId(other);
     if (!collisions[actor.type]) {
-      watcher.run = () => { console.error(`Collision Actor type ${actor.type} not found!`); };
+      watcher.run = () => { U.log(`Collision Actor type ${actor.type} not found!`, 'error'); };
       return watcher;
     }
     watcher.run = () => {
       for (const interactor of interactors) {
         const handleCollision = collisions[actor.type][interactor.type];
         if (typeof handleCollision !== 'function') {
-          console.error(`Collision Interactor type ${interactor.type} not found for Actor type ${actor.type}!`);
+          U.log(`Collision Interactor type ${interactor.type} not found for Actor type ${actor.type}!`, 'error');
           continue;
         }
         handleCollision(watcher, actor, interactor);

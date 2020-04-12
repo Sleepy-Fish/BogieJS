@@ -37,7 +37,7 @@ export default class Vector {
   direction (radians) {
     if (U.getter(arguments)) return Math.atan2(this.y, this.x);
     const magnitude = this.magnitude();
-    if (magnitude === 0) console.warn('Setting direction or angle on zero vector not advisable.');
+    if (magnitude === 0) U.log('Setting direction or angle on zero vector not advisable.', 'warn');
     this.x = Math.cos(radians) * magnitude;
     this.y = Math.sin(radians) * magnitude;
     return this;
@@ -45,7 +45,7 @@ export default class Vector {
 
   // In Degrees
   angle (degrees) {
-    if (U.getter(arguments)) return U.toDeg(this.direction());
+    if (U.getter(arguments)) return U.toDeg(Math.atan2(this.y, this.x));
     return this.direction(U.toRad(degrees));
   }
 
@@ -58,6 +58,14 @@ export default class Vector {
   }
 
   // ** --- Vector Arithmatic Functions --- ** //
+  equals (vector, precision = null) {
+    const value = precision
+      ? U.fix(this.x, precision) === U.fix(vector.x, precision) && U.fix(this.y, precision) === U.fix(vector.y, precision)
+      : this.x === vector.x && this.y === vector.y;
+    U.log(`${this.toPoint()} equals ${vector.toString()} (${precision || ''}): ${value}`, 'debug');
+    return value;
+  }
+
   // ADDITION - Accepts vector and adds x and y respectively
   plus (vector) {
     return new Vector(this.x + vector.x, this.y + vector.y);
@@ -106,8 +114,7 @@ export default class Vector {
   // Rotates this vector by a degree without effecting magnitude
   rotate (degree) {
     const r = this.angle();
-    this.angle(r + degree);
-    return this;
+    return this.angle(r + degree);
   }
 
   // Returns a new vector with applied degree rotation without effecting magnitude

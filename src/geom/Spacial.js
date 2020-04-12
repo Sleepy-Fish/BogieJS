@@ -6,9 +6,10 @@
 
 import U from '../utilities';
 import * as PIXI from 'pixi.js';
-import { Point, Vector } from '.';
+import { Point, Vector, Line } from '.';
 
 const _defaults = {
+  parent: null,
   maxSpeed: Infinity,
   minSpeed: 0,
   maxRotation: Infinity,
@@ -20,20 +21,29 @@ const _defaults = {
 
 const _collisionEvents = ['leave', 'enter', 'collide', 'collide-inner', 'collide-outer'];
 
+/**
+ * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
+ * @abstract
+ * @class
+ * @property {boolean} dynamic Determines if this Spacial is effected by transformations per tick
+ * @property {boolean} awake Determines if this Spacial is checking for collisions per tick
+ */
 export default class Spacial {
   /**
-   * Abstract class that gives physical transformation: (translation, rotation, and dilation) properties to a subclass
-   * @param {Spacial} parent Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
+   * Extends a class with necessary spacial functions and properties
    * @param {Object} options Base level options for Spacial.
-   * @param {number} options.maxSpeed Limit on positions updates per tick regardless of velocity or acceleration settings.
-   * @param {number} options.minSpeed Limit on positions updates per tick regardless of velocity or acceleration settings.
-   * @param {number} options.maxRotation Limit on angle updates per tick regardless of rotation or spin settings.
-   * @param {number} options.minRotation Limit on angle updates per tick regardless of rotation or spin settings.
-   * @param {number} options.maxSize Limit on scale factor regardless of dilation or stretch settings
-   * @param {number} options.minSize Limit on scale factor regardless of dilation or stretch settings
-   * @param {boolean} options.lockVelocityToAngle When velocity changes direction angle is updated too. Projectile or propulsion movement.
+   * @param {Spacial} [options.parent=null] Can be null or referential to another Spacial when creating more complicated multi-shape combinations.
+   * @param {number} [options.maxSpeed=Infinity] Limit on positions updates per tick regardless of velocity or acceleration settings.
+   * @param {number} [options.minSpeed=0] Limit on positions updates per tick regardless of velocity or acceleration settings.
+   * @param {number} [options.maxRotation=Infinity] Limit on angle updates per tick regardless of rotation or spin settings.
+   * @param {number} [options.minRotation=0] Limit on angle updates per tick regardless of rotation or spin settings.
+   * @param {number} [options.maxSize=Infinity] Limit on scale factor regardless of dilation or stretch settings
+   * @param {number} [options.minSize=0] Limit on scale factor regardless of dilation or stretch settings
+   * @param {boolean} [options.lockVelocityToAngle=false] When velocity changes direction angle is updated too. Projectile or propulsion movement.
+   * @constructor
    */
-  constructor (parent = null, {
+  constructor ({
+    parent = _defaults.parent,
     maxSpeed = _defaults.maxSpeed,
     minSpeed = _defaults.minSpeed,
     maxRotation = _defaults.maxRotation,
@@ -67,6 +77,7 @@ export default class Spacial {
     if (maxSpeed < minSpeed) throw Error(`maxSpeed (${maxSpeed}) cannot be lower than minSpeed (${minSpeed})`);
     this.maxSpeed = maxSpeed; // Upper bound +/- velocity at this value
     this.minSpeed = minSpeed; // Lower bound +/- velocity at this value
+    if (minSpeed !== 0) this.velocity(Vector.Zero());
     if (maxRotation < minRotation) throw Error(`maxRotation (${maxRotation}) cannot be lower than minRotation (${minRotation})`);
     this.maxRotation = maxRotation; // Upper bound +/- rotation at this value
     this.minRotation = minRotation; // Lower bound +/- rotation at this value
@@ -136,13 +147,20 @@ export default class Spacial {
     return this;
   }
 
+  /**
+   * Sets an event handler on this Spacial to be fired when interacting with some other set of Spacials.
+   * @param {String} event Event to perform handling on (enter, leave, collide, collide-inner, collide-outer)
+   * @param {Function} cb Callback to perform on collision event
+   * @param {String|Spacial|Spacial[]} [interactor="default"] Spacial(s) or world layer to perform collion handler for
+   * @return {Spacial} Returns this Spacial for chaining functions.
+   */
   on (event, cb, interactor = 'default') {
     if (!_collisionEvents.includes(event)) {
-      console.warn(`Unknown event binding: ${event}`);
+      U.log(`Unknown event binding: ${event}`, 'warn');
       return;
     }
     if (!this.world) {
-      console.warn('Must call `makeCollidable` before binding collision events');
+      U.log('Must call `makeCollidable` before binding collision events', 'warn');
       return;
     }
     const id = this.world.getId(interactor);
@@ -151,13 +169,19 @@ export default class Spacial {
     return this;
   }
 
+  /**
+   * Removes an event handler on this Spacial.
+   * @param {String} event Specificvent to remove (enter, leave, collide, collide-inner, collide-outer)
+   * @param {String|Spacial|Spacial[]} [interactor="default"] Spacial(s) or world layer to remove collion handler for
+   * @return {Spacial} Returns this Spacial for chaining functions.
+   */
   off (event, interactor = 'default') {
     if (!_collisionEvents.includes(event)) {
-      console.warn(`Unknown event unbinding: ${event}`);
+      U.log(`Unknown event unbinding: ${event}`, 'warn');
       return;
     }
     if (!this.world) {
-      console.warn('Must call `makeCollidable` before unbinding collision events');
+      U.log('Must call `makeCollidable` before unbinding collision events', 'warn');
       return;
     }
     const id = this.world.getId(interactor);
@@ -194,6 +218,25 @@ export default class Spacial {
     };
   }
 
+  edges () {
+    const edges = [];
+    if (this.vertices.length < 3) return edges;
+    for (let i = 1; i < this.vertices.length; i++) {
+      edges.push(new Line(this.vertices[i - 1], this.vertices[i]));
+    }
+    edges.push(new Line(this.vertices[this.vertices.length - 1], this.vertices[0]));
+    return edges;
+  }
+
+  contains (point) {
+    let cross = 0;
+    const cast = new Line(point, new Point(Infinity, point.y));
+    for (const edge in this.edges()) {
+      if (cast.crosses(edge)) cross++;
+    }
+    return cross % 2 === 1;
+  }
+
   /**
    * Cleans up any artifacts that could prevent this from being garbage collected.
    */
@@ -217,7 +260,7 @@ export default class Spacial {
       this.rotate(this.rot);
       this.dilate(this.dil);
     }
-    if (this.awake) {
+    if (this.awake && this.watchers) {
       for (const watcher of Object.values(this.watchers)) watcher.run(delta);
     }
   }
@@ -294,11 +337,10 @@ export default class Spacial {
    */
   shift (xOrVector, y) {
     if (xOrVector instanceof Object) {
-      this.position(this.pos.x + xOrVector.x, this.pos.y + xOrVector.y);
+      return this.position(this.pos.x + xOrVector.x, this.pos.y + xOrVector.y);
     } else {
-      this.position(this.pos.x + xOrVector, this.pos.y + y);
+      return this.position(this.pos.x + xOrVector, this.pos.y + y);
     }
-    return this;
   }
 
   /**
@@ -459,10 +501,10 @@ export default class Spacial {
       this.scl.y = y;
     }
     // Cap the scale factor to upper and lower bounds
-    if (Math.abs(this.scl.x) > this.maxSize) this.scl.x = this.maxSize * Math.sign(this.scl.x);
-    if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * Math.sign(this.scl.y);
-    if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * Math.sign(this.scl.x);
-    if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * Math.sign(this.scl.y);
+    if (Math.abs(this.scl.x) > this.maxSize) this.scl.x = this.maxSize * (Math.sign(this.scl.x) || 1);
+    if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * (Math.sign(this.scl.y) || 1);
+    if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * (Math.sign(this.scl.x) || 1);
+    if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * (Math.sign(this.scl.y) || 1);
     const delta = this.scl.minus(origin);
     for (const vertex of this.vertices) {
       vertex.scale(this.pos, delta.x, delta.y);

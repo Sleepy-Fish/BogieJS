@@ -18,6 +18,7 @@
     <!-- Example Scenes Get Attached To Bogie Object -->
     <script src="rectangleCollision.js"></script>
     <script src="circleCollision.js"></script>
+    <script src="circleRectCollision.js"></script>
 
     <!-- Example Page Styling -->
     <link href="index.css" rel="stylesheet" />
@@ -29,8 +30,9 @@
     <br>
     <div id="content">
       <div id="scenes">
-        <button onclick="Bogie.selectScene(this, 'rectangleCollision');" id="default-scene" >Rectangle Collision</button>
+        <button onclick="Bogie.selectScene(this, 'rectangleCollision');" >Rectangle Collision</button>
         <button onclick="Bogie.selectScene(this, 'circleCollision');" >Circle Collision</button>
+        <button onclick="Bogie.selectScene(this, 'circleRectCollision');" id="default-scene">Circle-Rect Collision</button>
         <button> ... </button>
       </div>
       <div id="viewport"></div>

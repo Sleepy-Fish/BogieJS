@@ -1,5 +1,5 @@
 if (!window.Bogie.scenes) window.Bogie.scenes = {};
-window.Bogie.scenes.circleCollision = () => {
+window.Bogie.scenes.circleRectCollision = () => {
   // Clear existing example and re-initialize
   window.Bogie.init();
 
@@ -7,6 +7,7 @@ window.Bogie.scenes.circleCollision = () => {
   // (These would normally be declared via package import syntax)
   const World = window.Bogie.Physics.World;
   const Circle = window.Bogie.Geom.Circle;
+  const Rectangle = window.Bogie.Geom.Rectangle;
   const Point = window.Bogie.Geom.Point;
   const Vector = window.Bogie.Geom.Vector;
   const app = window.app; // This is set in init()
@@ -15,29 +16,27 @@ window.Bogie.scenes.circleCollision = () => {
   // Physics World handles collision layers and exposes collision watcher creation
   const world = new World();
 
-  // Create a small circle that will move about the screen and collide with things
-  const actor = new Circle({
-    radius: 10
+  // Create a small rectangle that will move about the screen and collide with things
+  const actor = new Rectangle(null, {
+    height: 60,
+    width: 45
   })
-    .position(new Point(10, 10))
+    .position(new Point(200, 10))
+    .rotation(1)
     .makeCollidable(world)
     .makeDebug(app.stage);
 
   // Create a large circle that will stay centered on screen and be collided with
-  const interactor = new Circle({
-    radius: 80
+  const interactor = new Circle(null, {
+    radius: 100
   })
     .position(new Point(app.view.width / 2, app.view.height / 2))
     .makeCollidable(world)
     .makeDebug(app.stage);
 
-  // Initialize velocity of actor circle so it will collide
+  // Initialize velocity of actor rectangle so it will collide
   // To do this we set to the velocity vector to the angle between both circle centers
-  const angle = actor.position().angle(interactor.position());
-  actor.velocity(Vector.Zero().magnitude(4).angle(angle));
-
-  // Store how far apart the circles start so we know when to reset the scene
-  const startDistance = actor.position().distance(interactor.position());
+  actor.velocity(new Vector(1, 3));
 
   // Set event handlers for collision events
   actor.on('enter', () => {
@@ -64,8 +63,11 @@ window.Bogie.scenes.circleCollision = () => {
 
   // Add Bogie to PIXI app
   const loop = delta => {
+    const actorPos = actor.position();
+    if (actorPos.y > 600) actor.velocityY(-3);
+    if (actorPos.y < 10) actor.velocityY(3);
     // Reset actor postion if once it gets too far away
-    if (actor.position().distance(interactor.position()) > startDistance) actor.position(new Point(10, 10));
+    if (actorPos.x > 600) actor.x(200);
     // Run the Bogie objects that have a run function
     actor.run(delta);
     interactor.run(delta);

@@ -7,10 +7,11 @@
     "tests": false
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 0",
+    "test": "mocha --require @babel/register --preset babel ./test",
     "fix": "eslint --fix ./src",
     "dev": "webpack-dev-server",
     "build": "NODE_ENV=production webpack --mode=production",
+    "docs": "NODE_ENV=production webpack --config ./webpack.config.docs.js --mode=production && node ./renderDocs.js",
     "patch": "npm run build && np patch",
     "minor": "npm run build && np minor",
     "major": "npm run build && np major"
@@ -26,7 +27,15 @@
   "author": "J Riley Harrington <jrileyharrington@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/register": "^7.9.0",
+    "canvas": "^2.6.1",
     "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "doxdox": "^3.0.0",
+    "doxdox-parser-sleepyfish": "git://github.com/Sleepy-Fish/doxdox-parser-sleepyfish.git#master",
+    "doxdox-plugin-bogie": "git://github.com/Sleepy-Fish/doxdox-plugin-bogie.git#master",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-loader": "^3.0.3",
@@ -35,6 +44,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "html-webpack-plugin": "^3.2.0",
+    "jsdom": "^16.2.2",
+    "mocha": "^7.1.1",
     "np": "^5.2.1",
     "prismjs": "^1.19.0",
     "terser-webpack-plugin": "^2.3.4",
@@ -46,6 +57,6 @@
     "pixi.js": "^5.2.0"
   },
   "dependencies": {
-    "pixi.js": "^5.2.0"
+    "pixi.js": "^5.2.1"
   }
 }
