@@ -1,4 +1,11 @@
 import U from '../src/utilities';
+const { JSDOM } = require('jsdom');
+const { window } = new JSDOM();
+global.window = window;
+global.document = window.document;
+global.navigator = {
+  userAgent: 'node'
+};
 
 describe('Bogie Tests', function () {
   before(function () {

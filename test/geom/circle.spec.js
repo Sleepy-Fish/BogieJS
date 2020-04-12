@@ -1,8 +1,3 @@
-const { JSDOM } = require('jsdom');
-const { window } = new JSDOM();
-global.window = window;
-global.document = window.document;
-
 const U = require('../test.utilities').default;
 
 describe('Circle', function () {
