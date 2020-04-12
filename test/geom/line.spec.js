@@ -1,6 +1,5 @@
-const U = require('../test.utilities').default;
-const Point = require('../../src/geom/Point').default;
-const Line = require('../../src/geom/Line').default;
+import U from '../test.utilities';
+import { Point, Line } from '../../src/geom';
 
 describe('Line', function () {
   describe('properties', function () {

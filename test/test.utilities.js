@@ -1,5 +1,6 @@
 
 import { strict as assert } from 'assert';
+import path from 'path';
 import U from '../src/utilities';
 
 const _assert = (v1, v2 = null, o = {}) => {
@@ -23,7 +24,12 @@ const _rndBetween = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
 
+const _root = function (str) {
+  return path.join(__dirname, '..', str);
+};
+
 export default Object.assign(U, {
   assert: _assert,
-  rndBetween: _rndBetween
+  rndBetween: _rndBetween,
+  root: _root
 });

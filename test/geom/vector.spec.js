@@ -1,5 +1,5 @@
-const U = require('../test.utilities').default;
-const Vector = require('../../src/geom/Vector').default;
+import U from '../test.utilities';
+import { Vector } from '../../src/geom';
 
 describe('Vector', function () {
   // ** --- Vector Property Getters / Setters --- ** //

@@ -1,5 +1,5 @@
-const U = require('../test.utilities').default;
-const Point = require('../../src/geom/Point').default;
+import U from '../test.utilities';
+import { Point } from '../../src/geom';
 
 describe('Point', function () {
   // ** --- Point Geometry Math Functions --- ** //

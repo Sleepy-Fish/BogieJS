@@ -42,7 +42,7 @@ export default class World {
 
   // actor is the spacial that is doing the colidding
   // other is either
-  //  -- 1 a sacial (that you want to watch for collisions on)
+  //  -- 1 a spacial (that you want to watch for collisions on)
   // -- 2 an array of spacials (that you want to watch for collisions on)
   // -- 3 a string (the world layer name which you're watching for collisions)
   watcher (actor, other) {

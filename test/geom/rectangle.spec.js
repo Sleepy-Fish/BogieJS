@@ -1,4 +1,4 @@
-const U = require('../test.utilities').default;
+import U from '../test.utilities';
 
 describe('Rectangle', function () {
   // ** --- Utility Functions --- ** //

@@ -1,0 +1,30 @@
+{
+  "Circle": {
+    "path": "src/geom/Circle.js",
+    "test": "test/geom/circle.spec.js"
+  },
+  "Line": {
+    "path": "src/geom/Line.js",
+    "test": "test/geom/line.spec.js"
+  },
+  "Point": {
+    "path": "src/geom/Point.js",
+    "test": "test/geom/point.spec.js"
+  },
+  "Rectangle": {
+    "path": "src/geom/Rectangle.js",
+    "test": "test/geom/rectangle.spec.js"
+  },
+  "Spacial": {
+    "path": "src/geom/Spacial.js",
+    "test": "test/geom/spacial.spec.js"
+  },
+  "Vector": {
+    "path": "src/geom/Vector.js",
+    "test": "test/geom/vector.spec.js"
+  },
+  "World": {
+    "path": "src/physics/World.js",
+    "test": "test/physics/world.spec.js"
+  }
+}
