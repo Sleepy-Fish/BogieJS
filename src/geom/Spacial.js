@@ -478,10 +478,10 @@ export default class Spacial {
       this.scl.y = y;
     }
     // Cap the scale factor to upper and lower bounds
-    if (Math.abs(this.scl.x) > this.maxSize) this.scl.x = this.maxSize * Math.sign(this.scl.x);
-    if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * Math.sign(this.scl.y);
-    if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * Math.sign(this.scl.x);
-    if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * Math.sign(this.scl.y);
+    if (Math.abs(this.scl.x) > this.maxSize) this.scl.x = this.maxSize * (Math.sign(this.scl.x) || 1);
+    if (Math.abs(this.scl.y) > this.maxSize) this.scl.y = this.maxSize * (Math.sign(this.scl.y) || 1);
+    if (Math.abs(this.scl.x) < this.minSize) this.scl.x = this.minSize * (Math.sign(this.scl.x) || 1);
+    if (Math.abs(this.scl.y) < this.minSize) this.scl.y = this.minSize * (Math.sign(this.scl.y) || 1);
     const delta = this.scl.minus(origin);
     for (const vertex of this.vertices) {
       vertex.scale(this.pos, delta.x, delta.y);
