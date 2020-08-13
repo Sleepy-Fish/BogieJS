@@ -231,10 +231,14 @@ export default class Spacial {
   contains (point) {
     let cross = 0;
     const cast = new Line(point, new Point(Infinity, point.y));
-    for (const edge in this.edges()) {
-      if (cast.crosses(edge)) cross++;
+    U.log(this.edges());
+    for (const edge of this.edges()) {
+      U.log('WHAT');
+      if (edge.crosses(cast)) cross++;
     }
-    return cross % 2 === 1;
+    const value = cross % 2 === 1;
+    U.log(`${this} contains ${point} (): ${value}`, 'verbose');
+    return value;
   }
 
   /**

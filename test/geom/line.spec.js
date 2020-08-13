@@ -150,7 +150,7 @@ describe('Line', function () {
     });
     it('should print as string', function () {
       const line = new Line(new Point(1, 2), new Point(3, 4));
-      U.assert(`${line}`, 'Line[(1, 2) - (3, 4)]');
+      U.assert(`${line}`, 'Line[Point[1, 2] - Point[3, 4]]');
     });
     it('should make equivelant but non-reference equal copy', function () {
       const line = new Line(new Point(1, 2), new Point(3, 4));

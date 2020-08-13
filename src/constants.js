@@ -15,6 +15,6 @@ export const colors = {
 };
 
 export default {
-  LEVEL: levels.INFO,
+  LEVEL: levels.VERBOSE,
   PRECISION: 10
 };

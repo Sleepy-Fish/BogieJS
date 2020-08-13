@@ -58,4 +58,8 @@ export default class Rectangle extends Spacial {
     this.container.addChild(this.debug);
     return this;
   }
+
+  toString () {
+    return `Rectangle[${this.width}x${this.height}](${this.pos})`;
+  }
 }

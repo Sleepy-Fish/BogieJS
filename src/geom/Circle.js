@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import U from '../utilities';
 import Spacial from './Spacial';
 import { Point } from '.';
 
@@ -47,6 +48,12 @@ export default class Circle extends Spacial {
   }
 
   contains (point) {
-    return this.pos.distance(point) < this.radius;
+    const value = this.pos.distance(point) <= this.radius;
+    U.log(`${this} contains ${point} (): ${value}`);
+    return value;
+  }
+
+  toString () {
+    return `Circle[${this.radius}](${this.pos})`;
   }
 }

@@ -82,27 +82,33 @@ export default class Line {
   // This is largely flattened linear math and is a bit hard to follow the logic of in line.
   // For full explaination on this function: https://observablehq.com/@toja/line-box-intersection
   crosses (line, precision = null) {
+    let value = false;
     // Find shared denominator of both linear equations
     const d = (this.p1.x - this.p2.x) * (line.p1.y - line.p2.y) - (this.p1.y - this.p2.y) * (line.p1.x - line.p2.x);
     // If denominator is zero it implies lines are parellel so check if lines are coincident
-    if (d === 0) return this.contains(line.p1, precision) || this.contains(line.p2, precision);
+    if (d === 0) {
+      value = this.contains(line.p1, precision) || this.contains(line.p2, precision);
+      U.log(`${this} crosses ${line} (): ${value}`, 'verbose');
+      return value;
+    }
     // Bezier coefficient for both lines
     const t = ((this.p1.x - line.p1.x) * (line.p1.y - line.p2.y) - (this.p1.y - line.p1.y) * (line.p1.x - line.p2.x)) / d;
     const u = -((this.p1.x - this.p2.x) * (this.p1.y - line.p1.y) - (this.p1.y - this.p2.y) * (this.p1.x - line.p1.x)) / d;
     // Intersects if Bezier coefficient is between 0 and 1
     if ((t >= 0 && t <= 1) && (u >= 0 && u <= 1)) {
       // Calculate intersection point using Beziers formula
-      return new Point(
+      value = new Point(
         this.p1.x + t * (this.p2.x - this.p1.x),
         this.p1.y + t * (this.p2.y - this.p1.y)
       );
     }
-    return false;
+    U.log(`${this} crosses ${line} (): ${value}`, 'verbose');
+    return value;
   }
 
   // ** --- Line Utility Functions --- ** //
   toString () {
-    return `Line[(${this.p1.x}, ${this.p1.y}) - (${this.p2.x}, ${this.p2.y})]`;
+    return `Line[${this.p1} - ${this.p2}]`;
   }
 
   json () {
