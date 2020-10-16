@@ -3,7 +3,7 @@ import * as Geom from './geom';
 
 const Bogie = {
   Physics,
-  Geom
+  Geom,
 };
 
 export default Bogie;

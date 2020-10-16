@@ -23,6 +23,10 @@
     "path": "src/geom/Vector.js",
     "test": "test/geom/vector.spec.js"
   },
+  "Watcher": {
+    "path": "src/physics/Watcher.js",
+    "test": "test/physics/Watcher.spec.js"
+  },
   "World": {
     "path": "src/physics/World.js",
     "test": "test/physics/world.spec.js"

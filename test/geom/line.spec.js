@@ -117,8 +117,8 @@ describe('Line', function () {
       // Perpendicular intersection at the halfway point //
       let intersection = line.crosses(new Line(new Point(0, edge), new Point(edge, 0)));
       U.assert(intersection);
-      U.assert(intersection.constructor.name, 'Point');
-      U.assert(intersection.equals(new Point(edge / 2, edge / 2)));
+      U.assert(intersection.constructor.name, 'Boolean');
+      // U.assert(intersection.equals(new Point(edge / 2, edge / 2)));
       // Parellel non-intersection //
       intersection = line.crosses(new Line(new Point(edge / 2, 1), new Point(edge, (edge / 2) + 1)));
       U.assert(!intersection);
@@ -132,8 +132,8 @@ describe('Line', function () {
       // Perpendicular end-point intersection //
       intersection = line.crosses(new Line(new Point(edge, edge), new Point(edge * 2, 0)));
       U.assert(intersection);
-      U.assert(intersection.constructor.name, 'Point');
-      U.assert(intersection.equals(new Point(edge, edge)));
+      U.assert(intersection.constructor.name, 'Boolean');
+      // U.assert(intersection.equals(new Point(edge, edge)));
       // Perpendicular non-intersection //
       intersection = line.crosses(new Line(new Point(edge + 1, edge + 1), new Point((edge * 2) + 1, 1)));
       U.assert(!intersection);

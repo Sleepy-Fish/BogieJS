@@ -9,5 +9,5 @@ export {
   Point,
   Line,
   Rectangle,
-  Circle
+  Circle,
 };

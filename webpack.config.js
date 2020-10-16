@@ -1,56 +1,56 @@
 const path = require('path');
-const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const env = process.env.NODE_ENV;
 
 module.exports = {
+  mode: 'none',
   entry: {
-    bogie: './src/index.js',
-    'bogie.min': './src/index.js'
+    bogie: './src/index.ts',
+    'bogie.min': './src/index.ts',
   },
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     library: 'Bogie',
     libraryTarget: 'window',
-    libraryExport: 'default'
+    libraryExport: 'default',
   },
-  devtool: env === 'development' ? 'inline-source-map' : 'source-map',
-  devServer: {
-    contentBase: [
-      path.resolve(__dirname, 'examples'),
-      path.resolve(__dirname, 'node_modules')
-    ],
-    hot: true,
-    open: true
+  resolve: {
+    extensions: ['.js', '.ts'],
+    alias: {
+      '@': path.join(__dirname, 'src'),
+      '@src': path.join(__dirname, 'src'),
+    },
   },
   plugins: [
     new CleanWebpackPlugin(),
-    env === 'development' ? new webpack.HotModuleReplacementPlugin() : () => {}
+    new ESLintPlugin({
+      files: './src/',
+      extensions: ['js', 'ts'],
+    }),
   ],
+  performance: { hints: false },
   optimization: {
     minimize: true,
     minimizer: [
       new TerserPlugin({
-        include: /\.min\.js$/
-      })
-    ]
-  },
-  performance: {
-    hints: false
+        include: /\.min\.js$/,
+      }),
+    ],
   },
   module: {
     rules: [
       {
-        enforce: 'pre',
         test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: {
-          formatter: 'codeframe'
-        }
-      }
-    ]
-  }
+        use: 'babel-loader',
+        exclude: /(node_modules|dist|public|webpack.*.js)/,
+      },
+      {
+        test: /\.ts?$/,
+        use: 'ts-loader',
+        exclude: /(node_modules|dist|public|webpack.*.js)/,
+      },
+    ],
+  },
 };

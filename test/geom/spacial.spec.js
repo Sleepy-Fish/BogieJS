@@ -66,7 +66,7 @@ describe('Spacial', function () {
       const travel = Math.sqrt((maxSpeed * maxSpeed) / 2);
       const expected = new Point(travel, travel);
       const spacial = new Spacial({
-        maxSpeed
+        maxSpeed,
       })
         .position(Point.Zero())
         .velocity(vel);
@@ -80,7 +80,7 @@ describe('Spacial', function () {
       const vel = new Vector.One();
       const minSpeed = U.rndBetween(5, 15);
       const spacial = new Spacial({
-        minSpeed
+        minSpeed,
       })
         .position(Point.Zero());
       spacial.dynamic = true;
@@ -154,7 +154,7 @@ describe('Spacial', function () {
       const rot = 90;
       const maxRotation = U.rndBetween(2, 10);
       const spacial = new Spacial({
-        maxRotation
+        maxRotation,
       })
         .angle(0)
         .rotation(rot);
@@ -171,7 +171,7 @@ describe('Spacial', function () {
       const rot = 1;
       const minRotation = U.rndBetween(5, 15);
       const spacial = new Spacial({
-        minRotation
+        minRotation,
       })
         .angle(0)
         .rotation(rot);
@@ -253,7 +253,7 @@ describe('Spacial', function () {
       const scl = new Vector(1000, 1000);
       const maxSize = U.rndBetween(2, 10);
       const spacial = new Spacial({
-        maxSize
+        maxSize,
       })
         .scale(Vector.One())
         .dilation(scl);
@@ -265,7 +265,7 @@ describe('Spacial', function () {
       // intentionally underkill
       const minSize = U.rndBetween(3, 8);
       const spacial = new Spacial({
-        minSize
+        minSize,
       })
         .scale(Vector.One());
       U.assert(spacial.scale().equals(new Vector(minSize, minSize)));

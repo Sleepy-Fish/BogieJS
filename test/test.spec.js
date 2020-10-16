@@ -1,11 +1,11 @@
 import U from './test.utilities';
-import classList from '../classList.json';
+import classList from '../../classList.json';
 import { JSDOM } from 'jsdom';
 const { window } = new JSDOM();
 global.window = window;
 global.document = window.document;
 global.navigator = {
-  userAgent: 'node'
+  userAgent: 'node',
 };
 
 const arg = process.argv.pop();
