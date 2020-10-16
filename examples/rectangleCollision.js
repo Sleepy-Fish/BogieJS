@@ -18,7 +18,7 @@ window.Bogie.scenes.rectangleCollision = () => {
   // Create a small circle that will move about the screen and collide with things
   const actor = new Rectangle({
     width: 100,
-    height: 10
+    height: 10,
   })
     .position(new Point(10, 10))
     .makeCollidable(world)
@@ -27,7 +27,7 @@ window.Bogie.scenes.rectangleCollision = () => {
   // Create a large circle that will stay centered on screen and be collided with
   const interactor = new Rectangle({
     width: 350,
-    height: 100
+    height: 100,
   })
     .position(new Point(app.view.width / 2, app.view.height / 2))
     .makeCollidable(world)

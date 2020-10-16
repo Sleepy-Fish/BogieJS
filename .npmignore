@@ -1,6 +1,5 @@
 node_modules
-npm-debug.log*
+test
 examples
-webpack.config.js
-.eslintrc.js
-.DS_Store
+webpack.*.js
+classList.json

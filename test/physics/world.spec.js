@@ -8,14 +8,14 @@ describe('World', function () {
       const world = new World();
       const actor = new Rectangle({
         height: 10,
-        width: 10
+        width: 10,
       })
         .position(0, 0)
         .makeCollidable(world);
 
       const interactor = new Rectangle({
         height: 20,
-        width: 20
+        width: 20,
       })
         .position(100, 100)
         .makeCollidable(world);
@@ -27,7 +27,7 @@ describe('World', function () {
         'enter',
         'collide',
         'collide-inner',
-        'leave'
+        'leave',
       ];
       const events = [];
 
@@ -78,13 +78,13 @@ describe('World', function () {
     it('perform circle-circle collisions', function () {
       const world = new World();
       const actor = new Circle({
-        radius: 10
+        radius: 10,
       })
         .position(0, 0)
         .makeCollidable(world);
 
       const interactor = new Circle({
-        radius: 20
+        radius: 20,
       })
         .position(100, 100)
         .makeCollidable(world);
@@ -96,7 +96,7 @@ describe('World', function () {
         'enter',
         'collide',
         'collide-inner',
-        'leave'
+        'leave',
       ];
       const events = [];
 

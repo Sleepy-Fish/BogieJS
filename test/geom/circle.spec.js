@@ -6,7 +6,7 @@ describe('Circle', function () {
   describe('geometry', function () {
     it('should determine if circle contains point', function () {
       const circle = new Circle({
-        radius: 10
+        radius: 10,
       })
         .position(100, 100);
 
@@ -17,7 +17,7 @@ describe('Circle', function () {
         new Point(100, 89.9),
         new Point(100, 110.1),
         new Point(89.9, 100),
-        new Point(110.1, 100)
+        new Point(110.1, 100),
       ];
       const inside = [
         new Point(100, 100),
@@ -26,7 +26,7 @@ describe('Circle', function () {
         new Point(100, 90),
         new Point(100, 110),
         new Point(90, 100),
-        new Point(110, 100)
+        new Point(110, 100),
       ];
 
       for (const point of outside) {

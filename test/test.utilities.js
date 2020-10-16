@@ -31,5 +31,5 @@ const _root = function (str) {
 export default Object.assign(U, {
   assert: _assert,
   rndBetween: _rndBetween,
-  root: _root
+  root: _root,
 });

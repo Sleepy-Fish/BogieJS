@@ -2,7 +2,7 @@
   "name": "bogie",
   "version": "0.0.7",
   "description": "Collision extension for PIXI.js",
-  "main": "src/index.js",
+  "main": "index.js",
   "np": {
     "anyBranch": false,
     "cleanup": true,
@@ -12,14 +12,21 @@
     "releaseDraft": true
   },
   "scripts": {
-    "test": "mocha --require @babel/register --preset babel ./test",
-    "fix": "eslint --fix ./src",
-    "dev": "webpack-dev-server",
-    "build": "NODE_ENV=production webpack --mode=production && npm run docs",
-    "docs": "node ./generateDocs.js",
+    "test": "rm -rf dist && tsc && mocha --require @babel/register --preset babel ./dist/test",
+    "lint": "eslint . --ext .js,.ts",
+    "watch": "webpack --watch --config webpack.dev.config.js --ext .js,.ts",
+    "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/' --config webpack.dev.config.js --ext .js,.ts",
+    "build": "webpack --config webpack.prod.config.js",
     "patch": "npm run build && np patch",
     "minor": "npm run build && np minor",
-    "major": "npm run build && np major"
+    "major": "npm run build && np major",
+    "postinstall": "if [ ! $CIRCLECI ]; then npx husky install; fi",
+    "precommit": "npm run lint && npm test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
   },
   "keywords": [
     "pixi",
@@ -34,39 +41,42 @@
     "type": "git",
     "url": "git://github.com/Sleepy-Fish/BogieJS.git"
   },
-  "author": "J Riley Harrington <jrileyharrington@gmail.com>",
+  "author": "J Riley Harrington <riley@sleepy.fish>",
   "license": "MIT",
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.0",
-    "@babel/register": "^7.9.0",
-    "canvas": "^2.6.1",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "doxdox": "^3.0.0",
-    "doxdox-parser-sleepyfish": "git://github.com/Sleepy-Fish/doxdox-parser-sleepyfish.git#master",
-    "doxdox-plugin-json": "git://github.com/Sleepy-Fish/doxdox-plugin-json.git#master",
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-loader": "^3.0.3",
-    "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "html-webpack-plugin": "^3.2.0",
-    "jsdom": "^16.2.2",
-    "mocha": "^7.1.1",
-    "np": "^5.2.1",
-    "prismjs": "^1.19.0",
-    "terser-webpack-plugin": "^2.3.4",
-    "webpack": "^4.41.4",
-    "webpack-cli": "^3.3.10",
-    "webpack-dev-server": "^3.10.1"
+  "dependencies": {
+    "pixi.js": "^5.3.3"
   },
   "peerDependencies": {
-    "pixi.js": "^5.2.0"
+    "pixi.js": "^5.3.3"
   },
-  "dependencies": {
-    "pixi.js": "^5.2.1"
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/register": "^7.12.1",
+    "@types/webpack": "^4.41.22",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
+    "canvas": "^2.6.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "eslint": "^7.11.0",
+    "eslint-config-standard-with-typescript": "^19.0.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-webpack-plugin": "^2.1.0",
+    "husky": "^4.3.0",
+    "jsdom": "^16.4.0",
+    "mocha": "^8.1.3",
+    "prismjs": "^1.22.0",
+    "ts-loader": "^8.0.4",
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.2.0"
   }
 }
