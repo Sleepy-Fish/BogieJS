@@ -44,12 +44,12 @@ module.exports = {
       {
         test: /\.js$/,
         use: 'babel-loader',
-        exclude: /(node_modules|dist|public|webpack.*.js)/,
+        exclude: /(node_modules|dist|webpack.*.js)/,
       },
       {
         test: /\.ts?$/,
         use: 'ts-loader',
-        exclude: /(node_modules|dist|public|webpack.*.js)/,
+        exclude: /(node_modules|dist|webpack.*.js)/,
       },
     ],
   },

@@ -1,5 +1,6 @@
 node_modules
 test
+mocha
 examples
 webpack.*.js
 classList.json

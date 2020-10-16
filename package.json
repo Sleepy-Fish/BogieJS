@@ -12,7 +12,7 @@
     "releaseDraft": true
   },
   "scripts": {
-    "test": "rm -rf dist && tsc && mocha --require @babel/register --preset babel ./dist/test",
+    "test": "rm -rf mocha && tsc --outDir mocha && mocha --require @babel/register --preset babel ./mocha/test",
     "lint": "eslint . --ext .js,.ts",
     "watch": "webpack --watch --config webpack.dev.config.js --ext .js,.ts",
     "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/' --config webpack.dev.config.js --ext .js,.ts",
