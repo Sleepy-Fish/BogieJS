@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "Collision extension for PIXI.js",
   "main": "./dist/bogie.min.js",
+  "types": "dist/bogie.d.ts",
   "np": {
     "anyBranch": false,
     "cleanup": true,
@@ -12,16 +13,18 @@
     "releaseDraft": true
   },
   "scripts": {
-    "test": "rm -rf mocha && tsc --outDir mocha && mocha --require @babel/register --preset babel ./mocha/test",
+    "test": "mocha --require @babel/register --preset babel ./mocha/test",
     "lint": "eslint . --ext .js,.ts",
     "watch": "webpack --watch --config webpack.dev.config.js --ext .js,.ts",
     "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/' --config webpack.dev.config.js --ext .js,.ts",
     "build": "webpack --config webpack.prod.config.js",
-    "patch": "npm run build && np patch",
-    "minor": "npm run build && np minor",
-    "major": "npm run build && np major",
+    "patch": "np patch",
+    "minor": "np minor",
+    "major": "np major",
     "postinstall": "if [ ! $CIRCLECI ]; then npx husky install; fi",
-    "precommit": "npm run lint && npm test"
+    "pretest": "rm -rf mocha && tsc --outDir mocha",
+    "precommit": "npm run lint && npm test",
+    "prepublish": "npm run build"
   },
   "husky": {
     "hooks": {

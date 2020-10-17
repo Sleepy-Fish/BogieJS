@@ -5,13 +5,16 @@ export default class Line {
   p1: Point;
   p2: Point;
 
-  constructor (pointOrArray: Point | Point[], point?: Point) {
+  constructor (pointOrArray?: Point | Point[], point?: Point) {
     if (Array.isArray(pointOrArray)) {
       this.p1 = pointOrArray[0];
       this.p2 = pointOrArray[1];
+    } else if (pointOrArray === undefined) {
+      this.p1 = Point.Zero();
+      this.p2 = Point.Zero();
     } else {
       this.p1 = pointOrArray;
-      this.p2 = (point ?? Point.Zero) as Point;
+      this.p2 = (point ?? Point.Zero());
     }
   }
 
