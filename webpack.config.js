@@ -12,6 +12,8 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'Bogie',
+    libraryTarget: 'commonjs2',
   },
   resolve: {
     extensions: ['.js', '.ts'],
