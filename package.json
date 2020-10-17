@@ -22,7 +22,7 @@
     "minor": "np minor",
     "major": "np major",
     "postinstall": "if [ ! $CIRCLECI ]; then npx husky install; fi",
-    "pretest": "rm -rf mocha && tsc --outDir mocha",
+    "pretest": "rm -rf mocha && tsc --outDir mocha --module es6",
     "precommit": "npm run lint && npm test",
     "prepublish": "npm run build"
   },

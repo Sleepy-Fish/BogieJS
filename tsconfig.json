@@ -4,7 +4,7 @@
     "declaration": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "module": "es6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "target": "es5",
     "allowJs": true,
