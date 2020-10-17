@@ -2,7 +2,7 @@
   "name": "bogie",
   "version": "0.1.1",
   "description": "Collision extension for PIXI.js",
-  "main": "index.js",
+  "main": "./dist/bogie.min.js",
   "np": {
     "anyBranch": false,
     "cleanup": true,
