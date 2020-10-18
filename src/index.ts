@@ -1,9 +1,8 @@
-import * as Physics from './physics';
-import * as Geom from './geom';
-
-const Bogie = {
+import Physics from './physics';
+import Geom from './geom';
+export { default as Physics } from './physics';
+export { default as Geom } from './geom';
+export default {
   Physics,
   Geom,
 };
-
-export default Bogie;
