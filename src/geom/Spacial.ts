@@ -93,7 +93,7 @@ export default abstract class Spacial {
     return this;
   }
 
-  makeDebug (container: PIXI.Container, color: number, vcolor: number): Spacial {
+  makeDebug (container: PIXI.Container, color?: number, vcolor?: number): Spacial {
     if (this.container === null) this.container = container;
     if (this.debug !== null) this.container.removeChild(this.debug);
     if (this.vdebug !== null) for (const vdebug of this.vdebug) this.container.removeChild(vdebug);
@@ -105,7 +105,7 @@ export default abstract class Spacial {
       const vdebug = new PIXI.Sprite();
       vdebug.anchor.set(0.5, 0.5);
       const vgfx = new PIXI.Graphics();
-      vgfx.lineStyle(4, vcolor);
+      vgfx.lineStyle(4, (vcolor ?? 0x990000));
       vgfx.drawCircle(0, 0, 1);
       vdebug.addChild(vgfx);
       vdebug.x = vertex.x;
