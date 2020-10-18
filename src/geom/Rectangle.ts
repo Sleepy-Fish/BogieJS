@@ -26,8 +26,8 @@ export default class Rectangle extends Spacial {
     this.type = 'rectangle';
   }
 
-  makeDebug (container: PIXI.Container, color: number = 0x009900, vcolor: number = 0x990000): Rectangle {
-    super.makeDebug(container, color, vcolor);
+  makeDebug (container: PIXI.Container, color?: number, vcolor?: number): Rectangle {
+    super.makeDebug(container, (color ?? 0x009900), (vcolor ?? 0x990000));
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);
     gfx.drawRect(-(this.width / 2), -(this.height / 2), this.width, this.height);

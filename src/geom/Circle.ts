@@ -15,8 +15,8 @@ export default class Circle extends Spacial {
     this.vertices = [Point.Zero()];
   }
 
-  makeDebug (container: PIXI.Container, color: number = 0x009900, vcolor: number = 0x990000): Circle {
-    super.makeDebug(container, color, vcolor);
+  makeDebug (container: PIXI.Container, color?: number, vcolor?: number): Circle {
+    super.makeDebug(container, (color ?? 0x009900), (vcolor ?? 0x990000));
     const gfx = new PIXI.Graphics();
     gfx.lineStyle(1, color);
     gfx.drawCircle(0, 0, this.radius);

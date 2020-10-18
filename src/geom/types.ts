@@ -1,14 +1,14 @@
 import Spacial from './Spacial';
 
 export interface SpacialOptions {
-  parent: Spacial|null;
+  parent?: Spacial|null;
   maxSpeed?: number;
   minSpeed?: number;
   maxRotation?: number;
   minRotation?: number;
   maxSize?: number;
   minSize?: number;
-  lockVelocityToAngle: boolean;
+  lockVelocityToAngle?: boolean;
 };
 
 export interface RectangleOptions extends SpacialOptions {
