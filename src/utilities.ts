@@ -4,7 +4,7 @@ const _log = (msg: string, level: number | string = levels.INFO): void => {
   const key: string = (typeof (level) === 'string')
     ? level.toUpperCase()
     : Object.keys(levels).find(k => levels[k] === level) ?? '';
-  if (level >= C.LEVEL) console.info(colors[key], `${key}:`, msg);
+  if (levels[key] >= C.LEVEL) console.info(colors[key], `${key}:`, msg);
 };
 
 const _toDeg = (rad: number): number => {
