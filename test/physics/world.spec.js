@@ -1,24 +1,26 @@
 import U from '../test.utilities';
-import { Rectangle, Circle } from '../../src/geom';
-import { World } from '../../src/physics';
+import { Spacial } from '../../src/attributes/Shapes';
+import { World } from '../../src/world';
 
 describe('World', function () {
   describe('collision', function () {
     it('perform rectangle-rectangle collisions', function () {
       const world = new World();
-      const actor = new Rectangle({
+      const actor = new Spacial({
+        shape: 'rectangle',
         height: 10,
         width: 10,
+        world: world,
       })
-        .position(0, 0)
-        .makeCollidable(world);
+        .position(0, 0);
 
-      const interactor = new Rectangle({
+      const interactor = new Spacial({
+        shape: 'rectangle',
         height: 20,
         width: 20,
+        world: world,
       })
-        .position(100, 100)
-        .makeCollidable(world);
+        .position(100, 100);
 
       const expected = [
         'leave',
@@ -77,17 +79,19 @@ describe('World', function () {
     });
     it('perform circle-circle collisions', function () {
       const world = new World();
-      const actor = new Circle({
+      const actor = new Spacial({
+        shape: 'circle',
         radius: 10,
+        world: world,
       })
-        .position(0, 0)
-        .makeCollidable(world);
+        .position(0, 0);
 
-      const interactor = new Circle({
+      const interactor = new Spacial({
+        shape: 'circle',
         radius: 20,
+        world: world,
       })
-        .position(100, 100)
-        .makeCollidable(world);
+        .position(100, 100);
 
       const expected = [
         'leave',

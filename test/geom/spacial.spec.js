@@ -1,6 +1,6 @@
 import U from '../test.utilities';
 import { Point, Vector } from '../../src/geom';
-import Spacial from '../../src/geom/Spacial';
+import { Spacial } from '../../src/attributes/Shapes';
 
 describe('Spacial', function () {
   // ** --- Utility Functions --- ** //
@@ -32,24 +32,32 @@ describe('Spacial', function () {
       const spacial = new Spacial().position(reset);
       const vel = new Vector(U.rndBetween(-20, 20), U.rndBetween(-20, 20));
       spacial.shift(vel);
-      U.assert(spacial.position().equals(vel.toPoint()));
+      U.assert(spacial.position().equals(vel.toPoint()), null, {
+        msg: `${spacial.position()} equals ${vel.toPoint()}`,
+      });
       spacial.position(reset);
       spacial.shift(vel.x, vel.y);
-      U.assert(spacial.position().equals(vel.toPoint()));
+      U.assert(spacial.position().equals(vel.toPoint()), null, {
+        msg: `${spacial.position()} equals ${vel.toPoint()}`,
+      });
     });
     it('should translate position automatically correctly', function () {
       const reset = new Point.Zero();
       const spacial = new Spacial().position(reset).velocity(Vector.Zero());
       const vel = new Vector(U.rndBetween(-20, 20), U.rndBetween(-20, 20));
       spacial.velocity(vel);
-      // Test velocity does not effect position while dynamic is false
-      spacial.dynamic = false;
+      // Test velocity does not effect position while translatable is false
+      spacial.translatable = false;
       spacial.run();
-      U.assert(spacial.position().equals(reset));
-      // Test velocity does effect position while dynamic is true
-      spacial.dynamic = true;
+      U.assert(spacial.position().equals(reset), null, {
+        msg: `${spacial.position()} equals ${reset}`,
+      });
+      // Test velocity does effect position while translatable is true
+      spacial.translatable = true;
       spacial.run();
-      U.assert(spacial.position().equals(vel.toPoint()));
+      U.assert(spacial.position().equals(vel.toPoint()), null, {
+        msg: `${spacial.position()} equals ${vel.toPoint()}`,
+      });
       // Test individual velocity axis
       spacial.position(reset);
       vel.x = U.rndBetween(-20, 20);
@@ -57,7 +65,9 @@ describe('Spacial', function () {
       spacial.velocityX(vel.x);
       spacial.velocityY(vel.y);
       spacial.run();
-      U.assert(spacial.position().equals(vel.toPoint()));
+      U.assert(spacial.position().equals(vel.toPoint()), null, {
+        msg: `${spacial.position()} equals ${vel.toPoint()}`,
+      });
     });
     it('should not translate position more than maxSpeed', function () {
       // intentionally overkill
@@ -70,9 +80,8 @@ describe('Spacial', function () {
       })
         .position(Point.Zero())
         .velocity(vel);
-      spacial.dynamic = true;
       spacial.run();
-      U.assert(spacial.position().distance(Point.Zero()), maxSpeed, { precision: 10 });
+      U.assert(spacial.position().distance(Point.Zero()), maxSpeed);
       U.assert(spacial.position().equals(expected, 10));
     });
     it('should not translate position less than minSpeed', function () {
@@ -83,7 +92,6 @@ describe('Spacial', function () {
         minSpeed,
       })
         .position(Point.Zero());
-      spacial.dynamic = true;
       // First test no velocity set (should default to right oriented vector by default)
       let expected = new Point(minSpeed, 0);
       spacial.run();
@@ -135,13 +143,14 @@ describe('Spacial', function () {
       const spacial = new Spacial().angle(reset).rotation(0);
       const rot = U.rndBetween(1, 10);
       spacial.rotation(rot);
-      // Test rotation does not effect angle while dynamic is false
-      spacial.dynamic = false;
+      // Test rotation does not effect angle while rotatable is false
+      spacial.rotatable = false;
       spacial.run();
       U.assert(spacial.angle(), reset);
-      // Test velocity does effect angle while dynamic is true
-      spacial.dynamic = true;
+      // Test velocity does effect angle while rotatable is true
+      spacial.rotatable = true;
       spacial.run();
+
       U.assert(spacial.angle(), rot);
       // Test negative rotation
       spacial.angle(reset);
@@ -158,7 +167,6 @@ describe('Spacial', function () {
       })
         .angle(0)
         .rotation(rot);
-      spacial.dynamic = true;
       spacial.run();
       U.assert(spacial.angle(), maxRotation);
       spacial.angle(0);
@@ -175,7 +183,6 @@ describe('Spacial', function () {
       })
         .angle(0)
         .rotation(rot);
-      spacial.dynamic = true;
       spacial.run();
       U.assert(spacial.angle(), minRotation);
       spacial.angle(0);
@@ -232,13 +239,17 @@ describe('Spacial', function () {
       const scl = new Vector(U.rndBetween(1, 5), U.rndBetween(1, 5));
       spacial.dilation(scl);
       // Test velocity does not effect position while dynamic is false
-      spacial.dynamic = false;
+      spacial.scalable = false;
       spacial.run();
-      U.assert(spacial.scale().equals(reset));
+      U.assert(spacial.scale().equals(reset), null, {
+        msg: `${spacial.scale()} equals ${reset}`,
+      });
       // Test velocity does effect position while dynamic is true
-      spacial.dynamic = true;
+      spacial.scalable = true;
       spacial.run();
-      U.assert(spacial.scale().equals(scl));
+      U.assert(spacial.scale().equals(scl), null, {
+        msg: `${spacial.scale()} equals ${scl}`,
+      });
       // Test individual velocity axis
       spacial.scale(reset);
       scl.x = U.rndBetween(1, 5);
@@ -246,7 +257,9 @@ describe('Spacial', function () {
       spacial.dilationX(scl.x);
       spacial.dilationY(scl.y);
       spacial.run();
-      U.assert(spacial.scale().equals(scl));
+      U.assert(spacial.scale().equals(scl), null, {
+        msg: `${spacial.scale()} equals ${scl}`,
+      });
     });
     it('should not dilate more than maxSize', function () {
       // intentionally overkill

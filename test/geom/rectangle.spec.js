@@ -1,11 +1,13 @@
 import U from '../test.utilities';
-import { Rectangle, Point } from '../../src/geom';
+import { Point } from '../../src/geom';
+import { Spacial } from '../../src/attributes/Shapes';
 
 describe('Rectangle', function () {
   // ** --- Geometry Functions --- ** //
   describe('geometry', function () {
     it('should determine if rectangle contains point', function () {
-      const rect = new Rectangle({
+      const rect = new Spacial({
+        shape: 'rectangle',
         width: 10,
         height: 10,
       })
@@ -29,10 +31,14 @@ describe('Rectangle', function () {
       ];
 
       for (const point of outside) {
-        U.assert(!rect.contains(point));
+        U.assert(!rect.contains(point), null, {
+          msg: `${rect.toString()} doesn't contain ${point}`,
+        });
       }
       for (const point of inside) {
-        U.assert(rect.contains(point));
+        U.assert(rect.contains(point), null, {
+          msg: `${rect.toString()} contains ${point}`,
+        });
       }
     });
   });

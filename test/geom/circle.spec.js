@@ -1,11 +1,13 @@
 import U from '../test.utilities';
-import { Circle, Point } from '../../src/geom';
+import { Point } from '../../src/geom';
+import { Spacial } from '../../src/attributes/Shapes';
 
 describe('Circle', function () {
   // ** --- Geometry Functions --- ** //
   describe('geometry', function () {
     it('should determine if circle contains point', function () {
-      const circle = new Circle({
+      const circle = new Spacial({
+        shape: 'circle',
         radius: 10,
       })
         .position(100, 100);
@@ -30,10 +32,14 @@ describe('Circle', function () {
       ];
 
       for (const point of outside) {
-        U.assert(!circle.contains(point));
+        U.assert(!circle.contains(point), null, {
+          msg: `${circle} doesn't contain ${point}`,
+        });
       }
       for (const point of inside) {
-        U.assert(circle.contains(point));
+        U.assert(circle.contains(point), null, {
+          msg: `${circle} contains ${point}`,
+        });
       }
     });
   });

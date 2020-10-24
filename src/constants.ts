@@ -15,6 +15,6 @@ export const colors: { [key: string]: string; } = {
 };
 
 export default {
-  LEVEL: levels.VERBOSE,
+  LEVEL: levels.INFO,
   PRECISION: 10,
 };

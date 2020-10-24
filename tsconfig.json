@@ -9,6 +9,7 @@
     "target": "es5",
     "allowJs": true,
     "baseUrl": ".",
+    "experimentalDecorators": true,
     "paths": {
       "@": [ "src/*" ],
       "@/*": [ "src/*" ],

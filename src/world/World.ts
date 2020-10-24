@@ -1,9 +1,8 @@
-import collisions from './collisions';
 import Watcher from './Watcher';
-import { Collidable } from '../types';
+import { ICollidable } from '../attributes';
 
 export default class World {
-  layers: { [key: string]: Collidable[]; };
+  layers: { [key: string]: ICollidable[]; };
 
   constructor () {
     this.layers = {
@@ -11,7 +10,7 @@ export default class World {
     };
   }
 
-  getId (interactors: Collidable|Collidable[]|string): string {
+  getId (interactors: ICollidable|ICollidable[]|string): string {
     if (typeof interactors === 'string') {
       // World layer so return it as cache id
       return interactors;
@@ -24,26 +23,26 @@ export default class World {
     }
   }
 
-  add (spacial: Collidable, layer: string = 'global'): void {
+  add (spacial: ICollidable, layer: string = 'global'): void {
     if (!this.layer(layer).includes(spacial)) {
       this.layer(layer).push(spacial);
     }
   }
 
-  remove (spacial: Collidable, layer: string = 'global'): void {
+  remove (spacial: ICollidable, layer: string = 'global'): void {
     const index = this.layer(layer).indexOf(spacial);
     if (index >= 0) {
       this.layer(layer).splice(index, 1);
     }
   }
 
-  layer (layer: string): Collidable[] {
+  layer (layer: string): ICollidable[] {
     if (!Array.isArray(this.layers[layer])) this.layers[layer] = [];
     return this.layers[layer];
   }
 
-  watcher (actor: Collidable, other: Collidable|Collidable[]|string): Watcher {
-    let interactors: Collidable[];
+  watcher (actor: ICollidable, other: ICollidable|ICollidable[]|string): Watcher {
+    let interactors: ICollidable[];
     if (typeof other === 'string') {
       interactors = this.layer(other);
     } else if (!Array.isArray(other)) {
@@ -53,7 +52,7 @@ export default class World {
     }
     const watcher = new Watcher(this.getId(other), () => {
       for (const interactor of interactors) {
-        collisions[actor.type][interactor.type](watcher, actor, interactor);
+        actor.check(watcher, interactor);
       }
     });
     return watcher;
