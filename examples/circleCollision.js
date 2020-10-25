@@ -6,7 +6,7 @@ window.Bogie.scenes.circleCollision = () => {
   // Create global shortcut variables
   // (These would normally be declared via package import syntax)
   const World = window.Bogie.Physics.World;
-  const Circle = window.Bogie.Geom.Circle;
+  const Spacial = window.Bogie.Shapes.Spacial;
   const Point = window.Bogie.Geom.Point;
   const Vector = window.Bogie.Geom.Vector;
   const app = window.app; // This is set in init()
@@ -16,20 +16,22 @@ window.Bogie.scenes.circleCollision = () => {
   const world = new World();
 
   // Create a small circle that will move about the screen and collide with things
-  const actor = new Circle({
+  const actor = new Spacial({
+    shape: 'circle',
+    parent: app.stage,
+    world: world,
     radius: 10,
   })
-    .position(new Point(10, 10))
-    .makeCollidable(world)
-    .makeDebug(app.stage);
+    .position(new Point(10, 10));
 
   // Create a large circle that will stay centered on screen and be collided with
-  const interactor = new Circle({
+  const interactor = new Spacial({
+    shape: 'circle',
+    parent: app.stage,
+    world: world,
     radius: 80,
   })
-    .position(new Point(app.view.width / 2, app.view.height / 2))
-    .makeCollidable(world)
-    .makeDebug(app.stage);
+    .position(new Point(app.view.width / 2, app.view.height / 2));
 
   // Initialize velocity of actor circle so it will collide
   // To do this we set to the velocity vector to the angle between both circle centers
