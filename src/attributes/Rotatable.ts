@@ -6,39 +6,6 @@ export interface RotatableOptions {
   minRotation?: number;
 };
 
-export function DRotatable () {
-  return function (target: any) {
-    const targetInit = Object.getOwnPropertyDescriptor(target.prototype, 'init')?.value;
-    const translatableInit = Object.getOwnPropertyDescriptor(Rotatable.prototype, 'init')?.value;
-    Object.defineProperty(target.prototype, 'init', {
-      value: function () {
-        if (targetInit !== undefined) targetInit.call(this, arguments[0]);
-        if (translatableInit !== undefined) translatableInit.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    const targetRun = Object.getOwnPropertyDescriptor(target.prototype, 'run')?.value;
-    const translatableRun = Object.getOwnPropertyDescriptor(Rotatable.prototype, 'run')?.value;
-    Object.defineProperty(target.prototype, 'run', {
-      value: function () {
-        if (targetRun !== undefined) targetRun.call(this, arguments[0]);
-        if (translatableRun !== undefined) translatableRun.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    Object.getOwnPropertyNames(Rotatable.prototype).forEach(prop => {
-      if (prop !== 'constructor' && prop !== 'init' && prop !== 'run') {
-        const propDefinition = Object.getOwnPropertyDescriptor(Rotatable.prototype, prop);
-        if (propDefinition !== undefined) Object.defineProperty(target.prototype, prop, propDefinition);
-      }
-    });
-  };
-}
-
 export interface IRotatable {
   id: string;
   rotatable: boolean;
@@ -52,6 +19,10 @@ export interface IRotatable {
   run: (delta: number) => void;
   destroy: () => void;
   onRotate: (angle: number, delta: number, origin: number) => void;
+  angle: ((degree: number) => any) & (() => number);
+  rotate: (degree: number) => any;
+  rotation: ((degree: number) => any) & (() => number);
+  spin: (degree: number) => any;
 }
 
 export class Rotatable implements IRotatable {
@@ -95,9 +66,9 @@ export class Rotatable implements IRotatable {
   };
 
   // == angle == //
-  public angle (degree: number): Rotatable
+  public angle (degree: number): any
   public angle (): number
-  public angle (degree?: number): number|Rotatable {
+  public angle (degree?: number): number|any {
     if (degree === undefined) return U.clampAngle(this.ang);
     const origin = this.ang;
     this.ang = U.clampAngle(degree);
@@ -114,15 +85,15 @@ export class Rotatable implements IRotatable {
   };
 
   // == rotate == //
-  public rotate (degree: number): Rotatable {
+  public rotate (degree: number): any {
     this.angle(this.ang + degree);
     return this;
   };
 
   // == rotation == //
-  public rotation (degree: number): Rotatable
+  public rotation (degree: number): any
   public rotation (): number
-  public rotation (degree?: number): number|Rotatable {
+  public rotation (degree?: number): number|any {
     if (degree === undefined) return this.rot;
     this.rot = degree;
     // Cap the rotation to upper and lower bounds
@@ -132,7 +103,7 @@ export class Rotatable implements IRotatable {
   };
 
   // == spin == //
-  public spin (degree: number): Rotatable {
+  public spin (degree: number): any {
     this.rotation(this.rot + degree);
     return this;
   };

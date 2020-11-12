@@ -1,7 +1,7 @@
 import U from '../utilities';
 import * as PIXI from 'pixi.js';
 import Shape from './Shapes';
-import { Point } from '../geom';
+import { Point, Vector } from '../geom';
 
 export interface DebuggableOptions {
   shape: Shape;
@@ -11,39 +11,6 @@ export interface DebuggableOptions {
   height?: number;
   width?: number;
 };
-
-export function DDebuggable () {
-  return function (target: any) {
-    const targetInit = Object.getOwnPropertyDescriptor(target.prototype, 'init')?.value;
-    const translatableInit = Object.getOwnPropertyDescriptor(Debuggable.prototype, 'init')?.value;
-    Object.defineProperty(target.prototype, 'init', {
-      value: function () {
-        if (targetInit !== undefined) targetInit.call(this, arguments[0]);
-        if (translatableInit !== undefined) translatableInit.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    const targetRun = Object.getOwnPropertyDescriptor(target.prototype, 'run')?.value;
-    const translatableRun = Object.getOwnPropertyDescriptor(Debuggable.prototype, 'run')?.value;
-    Object.defineProperty(target.prototype, 'run', {
-      value: function () {
-        if (targetRun !== undefined) targetRun.call(this, arguments[0]);
-        if (translatableRun !== undefined) translatableRun.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    Object.getOwnPropertyNames(Debuggable.prototype).forEach(prop => {
-      if (prop !== 'constructor' && prop !== 'init' && prop !== 'run') {
-        const propDefinition = Object.getOwnPropertyDescriptor(Debuggable.prototype, prop);
-        if (propDefinition !== undefined) Object.defineProperty(target.prototype, prop, propDefinition);
-      }
-    });
-  };
-}
 
 export interface IDebuggable {
   id: string;
@@ -71,8 +38,12 @@ export class Debuggable implements IDebuggable {
   debug: PIXI.Sprite;
   vdebug: PIXI.Sprite[];
   pos: Point;
+  ang: number;
+  scl: Vector;
   vertices: Point[];
   _lastPos: Point;
+  _lastAng: number;
+  _lastScl: Vector;
   radius?: number;
   height?: number;
   width?: number;
@@ -90,8 +61,11 @@ export class Debuggable implements IDebuggable {
     if (this.debug === undefined) this.debug = new PIXI.Sprite();
     if (this.vdebug === undefined) this.vdebug = [];
     if (this.pos === undefined) this.pos = Point.Zero();
+    if (this.ang === undefined) this.ang = 0;
+    if (this.scl === undefined) this.scl = Vector.One();
     if (this._lastPos === undefined) this._lastPos = this.pos.copy();
-    if (this.vertices === undefined) this.vertices = [];
+    if (this._lastAng === undefined) this._lastAng = this.ang;
+    if (this._lastScl === undefined) this._lastScl = this.scl.copy();
     if (this.radius === undefined) {
       this.radius = this.shape === Shape.CIRCLE
         ? (options?.radius !== undefined) ? options.radius : 1
@@ -107,7 +81,7 @@ export class Debuggable implements IDebuggable {
         ? (options?.width !== undefined) ? options.width : 1
         : undefined;
     }
-    if (this.vertices === undefined) {
+    if (this.vertices === undefined || this.vertices.length === 0) {
       const hw = (this.width ?? 1) / 2;
       const hh = (this.height ?? 1) / 2;
       switch (this.shape) {
@@ -149,19 +123,36 @@ export class Debuggable implements IDebuggable {
       vdebug.y = vertex.y;
       this.container.addChild(vdebug);
       this.vdebug.push(vdebug);
-      this.parent.addChild(this.container);
     });
+    this.parent.addChild(this.container);
   }
 
   public run (delta: number): void {
-    if (this.debuggable && !this.pos.equals(this._lastPos)) {
-      this.debug.x = this.pos.x;
-      this.debug.y = this.pos.y;
-      this.vdebug.forEach((vdebug, i) => {
-        vdebug.x = this.vertices[i].x;
-        vdebug.y = this.vertices[i].y;
-      });
-      this._lastPos = this.pos.copy();
+    if (this.debuggable) {
+      let moved = false;
+      if (!this.pos.equals(this._lastPos)) {
+        this.debug.x = this.pos.x;
+        this.debug.y = this.pos.y;
+        this._lastPos = this.pos.copy();
+        moved = true;
+      }
+      if (this.ang !== this._lastAng) {
+        this.debug.angle = this.ang;
+        this._lastAng = this.ang;
+        moved = true;
+      }
+      if (!this.scl.equals(this._lastScl)) {
+        this.debug.scale.x = this.scl.x;
+        this.debug.scale.y = this.scl.y;
+        this._lastScl = this.scl.copy();
+        moved = true;
+      }
+      if (moved) {
+        this.vdebug.forEach((vdebug, i) => {
+          vdebug.x = this.vertices[i].x;
+          vdebug.y = this.vertices[i].y;
+        });
+      }
     }
   };
 

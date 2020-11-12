@@ -6,39 +6,6 @@ export interface ScalableOptions {
   minSize?: number;
 };
 
-export function DScalable () {
-  return function (target: any) {
-    const targetInit = Object.getOwnPropertyDescriptor(target.prototype, 'init')?.value;
-    const translatableInit = Object.getOwnPropertyDescriptor(Scalable.prototype, 'init')?.value;
-    Object.defineProperty(target.prototype, 'init', {
-      value: function () {
-        if (targetInit !== undefined) targetInit.call(this, arguments[0]);
-        if (translatableInit !== undefined) translatableInit.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    const targetRun = Object.getOwnPropertyDescriptor(target.prototype, 'run')?.value;
-    const translatableRun = Object.getOwnPropertyDescriptor(Scalable.prototype, 'run')?.value;
-    Object.defineProperty(target.prototype, 'run', {
-      value: function () {
-        if (targetRun !== undefined) targetRun.call(this, arguments[0]);
-        if (translatableRun !== undefined) translatableRun.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    Object.getOwnPropertyNames(Scalable.prototype).forEach(prop => {
-      if (prop !== 'constructor' && prop !== 'init' && prop !== 'run') {
-        const propDefinition = Object.getOwnPropertyDescriptor(Scalable.prototype, prop);
-        if (propDefinition !== undefined) Object.defineProperty(target.prototype, prop, propDefinition);
-      }
-    });
-  };
-}
-
 export interface IScalable {
   id: string;
   scalable: boolean;
@@ -52,6 +19,14 @@ export interface IScalable {
   run: (delta: number) => void;
   destroy: () => void;
   onScale: (scale: Vector, delta: Vector, origin: Vector) => void;
+  scale: ((xOrVector: Vector|number, y?: number) => any) & (() => Vector);
+  scaleX: ((val: number) => any) & (() => number);
+  scaleY: ((val: number) => any) & (() => number);
+  dilate: (xOrVector: Vector|number, y?: number) => any;
+  dilation: ((xOrVector: Vector|number, y?: number) => any) & (() => Vector);
+  dilationX: ((val: number) => any) & (() => number);
+  dilationY: ((val: number) => any) & (() => number);
+  stretch: (xOrVector: Vector|number, y?: number) => any;
 }
 
 export class Scalable implements IScalable {
@@ -75,7 +50,7 @@ export class Scalable implements IScalable {
     if (this.minSize === undefined) this.minSize = options?.minSize ?? 0;
     if (this.vertices === undefined) this.vertices = [];
     if (this.pos === undefined) this.pos = Point.Zero();
-    if (this.scl === undefined) this.scl = Vector.Zero();
+    if (this.scl === undefined) this.scl = Vector.One();
     if (this.dil === undefined) this.dil = Vector.Zero();
   }
 
@@ -95,9 +70,9 @@ export class Scalable implements IScalable {
   }
 
   // == scale == //
-  public scale (xOrVector: Vector | number, y?: number, cb?: Function): Scalable
+  public scale (xOrVector: Vector | number, y?: number, cb?: Function): any
   public scale (): Vector
-  public scale (xOrVector?: Vector | number, y?: number, cb?: Function): Vector|Scalable {
+  public scale (xOrVector?: Vector | number, y?: number, cb?: Function): Vector|any {
     if (xOrVector === undefined) return this.scl.copy();
     const origin = this.scl.copy();
     if (xOrVector instanceof Vector) {
@@ -123,23 +98,23 @@ export class Scalable implements IScalable {
     return this;
   };
 
-  public scaleX (val: number): Scalable
+  public scaleX (val: number): any
   public scaleX (): number
-  public scaleX (val?: number): number|Scalable {
+  public scaleX (val?: number): number|any {
     if (val === undefined) return this.scl.x;
     this.scale(val, this.scl.y);
     return this;
   };
 
-  public scaleY (val: number): Scalable
+  public scaleY (val: number): any
   public scaleY (): number
-  public scaleY (val?: number): number|Scalable {
+  public scaleY (val?: number): number|any {
     if (val === undefined) return this.scl.y;
     this.scale(this.scl.x, val);
     return this;
   };
 
-  public dilate (xOrVector: Vector | number, y?: number): Scalable {
+  public dilate (xOrVector: Vector | number, y?: number): any {
     if (xOrVector instanceof Vector) {
       return this.scale(this.scl.plus(xOrVector));
     } else if (y === undefined) {
@@ -149,9 +124,9 @@ export class Scalable implements IScalable {
     }
   };
 
-  public dilation (xOrVector: Vector | number, y?: number): Scalable
+  public dilation (xOrVector: Vector | number, y?: number): any
   public dilation (): Vector
-  public dilation (xOrVector?: Vector | number, y?: number): Vector|Scalable {
+  public dilation (xOrVector?: Vector | number, y?: number): Vector|any {
     if (xOrVector === undefined) return this.dil.copy();
     if (xOrVector instanceof Vector) {
       this.dil.x = xOrVector.x;
@@ -165,23 +140,23 @@ export class Scalable implements IScalable {
     return this;
   };
 
-  public dilationX (val: number): number
+  public dilationX (val: number): any
   public dilationX (): number
-  public dilationX (val?: number): number|Scalable {
+  public dilationX (val?: number): number|any {
     if (val === undefined) return this.dil.x;
     this.dilation(val, this.dil.y);
     return this;
   };
 
-  public dilationY (val: number): number
+  public dilationY (val: number): any
   public dilationY (): number
-  public dilationY (val?: number): number|Scalable {
+  public dilationY (val?: number): number|any {
     if (val === undefined) return this.dil.y;
     this.dilation(this.dil.x, val);
     return this;
   };
 
-  public stretch (xOrVector: Vector | number, y?: number): Scalable {
+  public stretch (xOrVector: Vector | number, y?: number): any {
     if (xOrVector instanceof Vector) {
       return this.dilation(this.dil.plus(xOrVector));
     } else if (y === undefined) {

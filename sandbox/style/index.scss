@@ -1,0 +1,69 @@
+@import 'prism-themes/themes/prism-atom-dark.css';
+
+code[class*="language-"], pre[class*="language-"] {
+  font-family: monospace;
+  background: black;
+  .token.keyword {
+    color: #006600;
+  }
+  .token.function {
+    color: #009977;
+  }
+  .token.number {
+    color: #446622;
+    font-style: italic;
+  }
+  .token.class-name {
+    color: #009900;
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
+
+body {
+  font-family: monospace;
+  color: #009900;
+  background-color: black;
+  #content {
+    display: grid;
+    grid-template-columns: auto 800px auto;
+    grid-auto-columns: 2fr; /* overflow size */
+    grid-auto-flow: column; /* overflow type */
+    grid-column-gap: 20px;
+    #scenes {
+      display: grid;
+      grid-template-columns: auto auto auto;
+      grid-template-rows: repeat(auto-fill, 40px);
+      grid-gap: 2px 4px;
+    }
+    button {
+      color: #009900;
+      background-color: black;
+      border: 1px solid #009900;
+      outline: none;
+      height: 40px;
+    }
+    button.active, button:hover {
+      color: #00ff00;
+      border: 1px solid #00ff00;
+    }
+    canvas {
+      border: 1px solid #009900;
+    }
+    #code {
+      border: 1px solid #009900;
+      min-height: 900px;
+    }
+    pre {
+      margin: 0 !important;
+      padding: 0px 10px !important;
+      height:100%;
+      overflow-y: scroll;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    pre::-webkit-scrollbar { 
+      display: none;
+    }
+  }
+}

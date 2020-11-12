@@ -6,39 +6,6 @@ export interface TranslatableOptions {
   minSpeed?: number;
 };
 
-export function DTranslatable () {
-  return function (target: any) {
-    const targetInit = Object.getOwnPropertyDescriptor(target.prototype, 'init')?.value;
-    const translatableInit = Object.getOwnPropertyDescriptor(Translatable.prototype, 'init')?.value;
-    Object.defineProperty(target.prototype, 'init', {
-      value: function () {
-        if (targetInit !== undefined) targetInit.call(this, arguments[0]);
-        if (translatableInit !== undefined) translatableInit.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    const targetRun = Object.getOwnPropertyDescriptor(target.prototype, 'run')?.value;
-    const translatableRun = Object.getOwnPropertyDescriptor(Translatable.prototype, 'run')?.value;
-    Object.defineProperty(target.prototype, 'run', {
-      value: function () {
-        if (targetRun !== undefined) targetRun.call(this, arguments[0]);
-        if (translatableRun !== undefined) translatableRun.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    Object.getOwnPropertyNames(Translatable.prototype).forEach(prop => {
-      if (prop !== 'constructor' && prop !== 'init' && prop !== 'run') {
-        const propDefinition = Object.getOwnPropertyDescriptor(Translatable.prototype, prop);
-        if (propDefinition !== undefined) Object.defineProperty(target.prototype, prop, propDefinition);
-      }
-    });
-  };
-}
-
 export interface ITranslatable {
   id: string;
   translatable: boolean;
@@ -51,6 +18,14 @@ export interface ITranslatable {
   run: (delta: number) => void;
   destroy: () => void;
   onTranslate: (position: Point, delta: Point, origin: Point) => void;
+  position: ((xOrPoint: Point|number, y?: number) => any) & (() => Point);
+  x: ((val: number) => any) & (() => number);
+  y: ((val: number) => any) & (() => number);
+  shift: (xOrVector: Vector|number, y?: number) => any;
+  velocity: ((xOrVector: Vector|number, y?: number) => any) & (() => Vector);
+  velocityX: ((val: number) => any) & (() => number);
+  velocityY: ((val: number) => any) & (() => number);
+  accelerate: (xOrVector: Vector|number, y?: number) => any;
 }
 
 export class Translatable implements ITranslatable {
@@ -94,9 +69,9 @@ export class Translatable implements ITranslatable {
   }
 
   // == position == //
-  public position (xOrPoint: Point|number, y?: number): Translatable;
+  public position (xOrPoint: Point|number, y?: number): any;
   public position (): Point;
-  public position (xOrPoint?: Point|number, y?: number): Point|Translatable {
+  public position (xOrPoint?: Point|number, y?: number): Point|any {
     if (xOrPoint === undefined) return this.pos.copy();
     const origin = this.pos.copy();
     if (xOrPoint instanceof Point) {
@@ -118,23 +93,23 @@ export class Translatable implements ITranslatable {
   };
 
   // == x == //
-  public x (val: number): Translatable;
+  public x (val: number): any;
   public x (): number;
-  public x (val?: number): number|Translatable {
+  public x (val?: number): number|any {
     if (val === undefined) return this.pos.x;
     return this.position(val, this.pos.y);
   };
 
   // == y == //
-  public y (val: number): Translatable;
+  public y (val: number): any;
   public y (): number;
-  public y (val?: number): number|Translatable {
+  public y (val?: number): number|any {
     if (val === undefined) return this.pos.y;
     return this.position(this.pos.x, val);
   };
 
   // == shift == //
-  public shift (xOrVector: Vector|number, y?: number): Translatable {
+  public shift (xOrVector: Vector|number, y?: number): any {
     if (xOrVector instanceof Vector) {
       return this.position(this.pos.x + xOrVector.x, this.pos.y + xOrVector.y);
     } else if (y === undefined) {
@@ -145,9 +120,9 @@ export class Translatable implements ITranslatable {
   };
 
   // == velocity == //
-  public velocity (xOrVector: Vector|number, y?: number): Translatable
+  public velocity (xOrVector: Vector|number, y?: number): any
   public velocity (): Vector;
-  public velocity (xOrVector?: Vector|number, y?: number): Vector|Translatable {
+  public velocity (xOrVector?: Vector|number, y?: number): Vector|any {
     if (xOrVector === undefined) return this.vel.copy();
     if (xOrVector instanceof Vector) {
       this.vel.x = xOrVector.x;
@@ -166,23 +141,23 @@ export class Translatable implements ITranslatable {
   };
 
   // == velocityX == //
-  public velocityX (val: number): Translatable;
+  public velocityX (val: number): any;
   public velocityX (): number;
-  public velocityX (val?: number): number|Translatable {
+  public velocityX (val?: number): number|any {
     if (val === undefined) return this.vel.x;
     return this.velocity(val, this.vel.y);
   };
 
   // == velocityY == //
-  public velocityY (val: number): Translatable;
+  public velocityY (val: number): any;
   public velocityY (): number;
-  public velocityY (val?: number): number|Translatable {
+  public velocityY (val?: number): number|any {
     if (val === undefined) return this.vel.y;
     return this.velocity(this.vel.x, val);
   };
 
   // == accelerate == //
-  public accelerate (xOrVector: Vector|number, y?: number): Translatable {
+  public accelerate (xOrVector: Vector|number, y?: number): any {
     if (xOrVector instanceof Vector) {
       return this.velocity(this.vel.plus(xOrVector));
     } else if (y === undefined) {

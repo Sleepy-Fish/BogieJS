@@ -4,7 +4,7 @@ import { World } from '../../src/world';
 
 describe('World', function () {
   describe('collision', function () {
-    it('perform rectangle-rectangle collisions', function () {
+    it('should perform rectangle-rectangle collisions', function () {
       const world = new World();
       const actor = new Spacial({
         shape: 'rectangle',
@@ -77,7 +77,7 @@ describe('World', function () {
         U.assert(events[i], expected[i]);
       }
     });
-    it('perform circle-circle collisions', function () {
+    it('should perform circle-circle collisions', function () {
       const world = new World();
       const actor = new Spacial({
         shape: 'circle',

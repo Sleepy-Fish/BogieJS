@@ -62,39 +62,6 @@ export interface CollidableOptions {
   width?: number;
 };
 
-export function DCollidable () {
-  return function (target: any) {
-    const targetInit = Object.getOwnPropertyDescriptor(target.prototype, 'init')?.value;
-    const translatableInit = Object.getOwnPropertyDescriptor(Collidable.prototype, 'init')?.value;
-    Object.defineProperty(target.prototype, 'init', {
-      value: function () {
-        if (targetInit !== undefined) targetInit.call(this, arguments[0]);
-        if (translatableInit !== undefined) translatableInit.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    const targetRun = Object.getOwnPropertyDescriptor(target.prototype, 'run')?.value;
-    const translatableRun = Object.getOwnPropertyDescriptor(Collidable.prototype, 'run')?.value;
-    Object.defineProperty(target.prototype, 'run', {
-      value: function () {
-        if (targetRun !== undefined) targetRun.call(this, arguments[0]);
-        if (translatableRun !== undefined) translatableRun.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    Object.getOwnPropertyNames(Collidable.prototype).forEach(prop => {
-      if (prop !== 'constructor' && prop !== 'init' && prop !== 'run') {
-        const propDefinition = Object.getOwnPropertyDescriptor(Collidable.prototype, prop);
-        if (propDefinition !== undefined) Object.defineProperty(target.prototype, prop, propDefinition);
-      }
-    });
-  };
-}
-
 export interface ICollidable {
   id: string;
   collidable: boolean;
@@ -106,7 +73,7 @@ export interface ICollidable {
   vertices: Point[];
   run: (delta: number) => void;
   destroy: () => void;
-  on: (event: CollisionEvent, cb: () => void, interactor: string) => any;
+  on: (event: CollisionEvent, cb: () => void, interactors?: ICollidable|ICollidable[]|string) => any;
   off: (event: CollisionEvent, interactor: string) => any;
   axes: (other: ICollidable) => Vector[];
   project: (normal: Vector) => Projection;
@@ -158,7 +125,7 @@ export class Collidable implements ICollidable {
         ? (options?.width !== undefined) ? options.width : 1
         : undefined;
     }
-    if (this.vertices === undefined) {
+    if (this.vertices === undefined || this.vertices.length === 0) {
       const hw = (this.width ?? 1) / 2;
       const hh = (this.height ?? 1) / 2;
       switch (this.shape) {
@@ -193,15 +160,15 @@ export class Collidable implements ICollidable {
     this.world.remove(this, this.layer);
   };
 
-  public on (event: CollisionEvent, cb: () => void, interactor: string = 'default'): Collidable {
-    const id = this.world.getId(interactor);
-    if (!(this.watchers[id] instanceof Watcher)) this.watchers[id] = this.world.watcher(this, interactor);
+  public on (event: CollisionEvent, cb: () => void, interactors: ICollidable|ICollidable[]|string = 'default'): any {
+    const id = this.world.getId(interactors);
+    if (!(this.watchers[id] instanceof Watcher)) this.watchers[id] = this.world.watcher(this, interactors);
     this.watchers[id].on(event, cb);
     return this;
   };
 
-  public off (event: CollisionEvent, interactor: string = 'default'): Collidable {
-    const id = this.world.getId(interactor);
+  public off (event: CollisionEvent, interactors: ICollidable|ICollidable[]|string = 'default'): any {
+    const id = this.world.getId(interactors);
     if (this.watchers[id] instanceof Watcher) this.watchers[id].removeAllListeners(event);
     return this;
   };
@@ -252,7 +219,7 @@ export class Collidable implements ICollidable {
       return this.pos.distance(point) <= this.radius;
     }
     let cross = 0;
-    const cast = new Line(point, new Point(Number.MAX_SAFE_INTEGER, point.y));
+    const cast = new Line(point, new Point(point.x, Number.MAX_SAFE_INTEGER));
     for (const edge of this.edges()) {
       if (edge.crosses(cast)) cross++;
     }

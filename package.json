@@ -15,9 +15,8 @@
   "scripts": {
     "test": "mocha --require @babel/register --preset babel ./mocha/test",
     "lint": "eslint . --ext .js,.ts",
-    "watch": "webpack --watch --config webpack.dev.config.js --ext .js,.ts",
-    "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/' --config webpack.dev.config.js --ext .js,.ts",
-    "build": "webpack --config webpack.prod.config.js",
+    "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/' --config webpack.sandbox.config.js --ext .js,.ts",
+    "build": "webpack",
     "patch": "np patch",
     "minor": "np minor",
     "major": "np major",
@@ -46,9 +45,7 @@
   },
   "author": "J Riley Harrington <riley@sleepy.fish>",
   "license": "MIT",
-  "dependencies": {
-    "pixi.js": "^5.3.3"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "pixi.js": "^5.3.3"
   },
@@ -59,11 +56,13 @@
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
     "@babel/register": "^7.12.1",
+    "@types/prismjs": "^1.16.2",
     "@types/webpack": "^4.41.22",
     "@typescript-eslint/eslint-plugin": "^4.4.0",
     "@typescript-eslint/parser": "^4.4.0",
     "canvas": "^2.6.1",
     "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^5.0.1",
     "eslint": "^7.11.0",
     "eslint-config-standard-with-typescript": "^19.0.1",
     "eslint-plugin-import": "^2.22.1",
@@ -71,16 +70,21 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-webpack-plugin": "^2.1.0",
+    "html-webpack-plugin": "^4.5.0",
     "husky": "^4.3.0",
     "jsdom": "^16.4.0",
     "mocha": "^8.1.3",
     "np": "^6.5.0",
+    "pixi.js": "^5.3.3",
+    "prism-themes": "^1.5.0",
     "prismjs": "^1.22.0",
+    "sass": "^1.29.0",
+    "sass-loader": "^10.1.0",
+    "style-loader": "^2.0.0",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.2.0"
+    "webpack-dev-server": "^3.11.0"
   }
 }
