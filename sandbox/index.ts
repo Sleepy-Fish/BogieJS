@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import './style';
 import * as PIXI from 'pixi.js';
 import * as prism from 'prismjs';
@@ -7,6 +8,13 @@ import {
   circCircCollision,
   circCircCollisionStr,
 } from './samples';
+
+const scenes = [
+  { function: rectRectCollision, code: rectRectCollisionStr, button: $('#rect-rect-collision') },
+  { function: circCircCollision, code: circCircCollisionStr, button: $('#circ-circ-collision') },
+];
+const viewport = $('#viewport');
+const code = $('#prism');
 
 let app = new PIXI.Application();
 function resetApp (): void {
@@ -26,52 +34,25 @@ function resetApp (): void {
     height,
     backgroundColor: 0x000000,
   });
-  const viewport = document.getElementById('viewport');
-  if (viewport !== null) {
-    viewport.innerHTML = '';
-    viewport.appendChild(app.view);
-  }
-  window.addEventListener('resize', () => {
+  viewport.html(app.view);
+  $(window).on('resize', function () {
     const width = Math.min(800, window.innerWidth);
     const height = Math.round(width * 0.75);
     app.renderer.resize(width, height);
   });
 };
 
-const setRectRectCollision = (): void => {
-  resetApp();
-  rectRectCollision(app);
-  const code = document.getElementById('prism');
-  if (code !== null) {
-    code.innerHTML = prism.highlight(
-      rectRectCollisionStr,
+for (const scene of scenes) {
+  scene.button.on('click', function () {
+    $('.scene-button').css({ borderColor: '#009900' });
+    scene.button.css({ borderColor: '#00ff00' });
+    resetApp();
+    scene.function(app);
+    code.html(prism.highlight(
+      scene.code,
       prism.languages.javascript,
       'javascript',
-    );
-  }
+    ));
+  });
 };
-
-const setCircCircCollision = (): void => {
-  resetApp();
-  circCircCollision(app);
-  const code = document.getElementById('prism');
-  if (code !== null) {
-    code.innerHTML = prism.highlight(
-      circCircCollisionStr,
-      prism.languages.javascript,
-      'javascript',
-    );
-  }
-};
-
-const rectRectCollisionButton = document.getElementById('rect-rect-collision');
-if (rectRectCollisionButton !== null) {
-  rectRectCollisionButton.onclick = setRectRectCollision;
-};
-
-const circCircCollisionButton = document.getElementById('circ-circ-collision');
-if (circCircCollisionButton !== null) {
-  circCircCollisionButton.onclick = setCircCircCollision;
-};
-
-setRectRectCollision();
+scenes[0].button.click();

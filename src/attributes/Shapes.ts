@@ -11,6 +11,7 @@ import {
   ScalableOptions,
 } from './';
 
+import Attribute from './Attribute';
 import { Translatable } from './Translatable';
 import { Rotatable } from './Rotatable';
 import { Scalable } from './Scalable';
@@ -25,41 +26,10 @@ enum Shape {
 export default Shape;
 
 interface SpacialOptions extends TranslatableOptions, RotatableOptions, ScalableOptions, DebuggableOptions, CollidableOptions {};
+interface ShapeOptions extends Omit<SpacialOptions, 'shape'> { shape?: any; }
 export interface Spacial extends ITranslatable, IRotatable, IScalable, IDebuggable, ICollidable {}
-
-function Attribute (Base: any) {
-  return (target: any): any => {
-    const targetInit = Object.getOwnPropertyDescriptor(target.prototype, 'init')?.value;
-    const translatableInit = Object.getOwnPropertyDescriptor(Base.prototype, 'init')?.value;
-    Object.defineProperty(target.prototype, 'init', {
-      value: function () {
-        if (targetInit !== undefined) targetInit.call(this, arguments[0]);
-        if (translatableInit !== undefined) translatableInit.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    const targetRun = Object.getOwnPropertyDescriptor(target.prototype, 'run')?.value;
-    const translatableRun = Object.getOwnPropertyDescriptor(Base.prototype, 'run')?.value;
-    Object.defineProperty(target.prototype, 'run', {
-      value: function () {
-        if (targetRun !== undefined) targetRun.call(this, arguments[0]);
-        if (translatableRun !== undefined) translatableRun.call(this, arguments[0]);
-      },
-      writable: true,
-      configurable: true,
-      enumerable: false,
-    });
-    Object.getOwnPropertyNames(Base.prototype).forEach(prop => {
-      if (prop !== 'constructor' && prop !== 'init' && prop !== 'run') {
-        const propDefinition = Object.getOwnPropertyDescriptor(Base.prototype, prop);
-        if (propDefinition !== undefined) Object.defineProperty(target.prototype, prop, propDefinition);
-      }
-    });
-    return target;
-  };
-}
+export interface Rectangle extends Spacial {}
+export interface Circle extends Spacial {}
 
 @Attribute(Translatable)
 @Attribute(Rotatable)
@@ -82,5 +52,35 @@ export class Spacial {
       default:
         return `Spacial[${this.id}]`;
     }
+  }
+}
+
+export class Rectangle extends Spacial {
+  constructor (options?: ShapeOptions) {
+    if (options === undefined) {
+      options = { shape: Shape.RECTANGLE };
+    } else {
+      options.shape = Shape.RECTANGLE;
+    }
+    super(options as SpacialOptions);
+  }
+
+  toString (): string {
+    return `Rectangle[${this.id}]`;
+  }
+}
+
+export class Circle extends Spacial {
+  constructor (options?: ShapeOptions) {
+    if (options === undefined) {
+      options = { shape: Shape.CIRCLE };
+    } else {
+      options.shape = Shape.CIRCLE;
+    }
+    super(options as SpacialOptions);
+  }
+
+  toString (): string {
+    return `Circle[${this.id}]`;
   }
 }

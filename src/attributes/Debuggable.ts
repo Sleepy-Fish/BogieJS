@@ -27,6 +27,7 @@ export interface IDebuggable {
   radius?: number;
   height?: number;
   width?: number;
+  color: ((color: number) => any) & (() => number);
 }
 
 export class Debuggable implements IDebuggable {
@@ -163,4 +164,22 @@ export class Debuggable implements IDebuggable {
       this.container.removeChild(vdebug);
     });
   };
+
+  public color (color: number): any;
+  public color (): number;
+  public color (color?: number): number|any {
+    if (color === undefined) return (this.debug.children[0] as PIXI.Graphics).line.color;
+    this.debug.removeChild();
+    const gfx = new PIXI.Graphics();
+    gfx.lineStyle(1, color);
+    if (this.shape === Shape.RECTANGLE && this.height !== undefined && this.width !== undefined) {
+      gfx.drawRect(-(this.width / 2), -(this.height / 2), this.width, this.height);
+    } else if (this.shape === Shape.CIRCLE && this.radius !== undefined) {
+      gfx.drawCircle(0, 0, this.radius);
+    }
+    this.debug.addChild(gfx);
+    this.debug.x = this.pos.x;
+    this.debug.y = this.pos.y;
+    return this;
+  }
 }

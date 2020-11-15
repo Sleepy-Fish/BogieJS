@@ -13,7 +13,7 @@ export { default as Line } from './geom/Line';
 export { default as Shapes } from './attributes';
 export { default as Shape } from './attributes/Shapes';
 export { CollisionEvent } from './attributes/Collidable';
-export { Spacial } from './attributes/Shapes';
+export { Spacial, Rectangle, Circle } from './attributes/Shapes';
 export default {
   Physics,
   Geom,
