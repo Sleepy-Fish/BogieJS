@@ -1,0 +1,42 @@
+
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package-lock.json" }}
+          - v1-dependencies-
+      - run: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
+      - run: npm run deploy
+      - persist_to_workspace:
+           root: .
+           paths:
+            - dist/
+  deploy:
+    machine:
+        enabled: true
+    steps:
+      - attach_workspace:
+          at: .
+      - deploy:
+          command: scp -oStrictHostKeyChecking=no -r ./dist/* circleci@sleepy.fish:/var/www/sleepy.fish/bogie
+workflows:
+  version: 2
+  launch:
+    jobs:
+      - build
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build

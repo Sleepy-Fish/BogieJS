@@ -15,6 +15,7 @@
   "scripts": {
     "test": "mocha --require @babel/register --preset babel ./mocha/test",
     "lint": "eslint . --ext .js,.ts",
+    "deploy": "webpack --config webpack.sandbox.config.js",
     "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/' --config webpack.sandbox.config.js --ext .js,.ts",
     "build": "webpack",
     "patch": "np patch",
