@@ -1,10 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { World, Spacial, Point, Vector, Shape, CollisionEvent } from '../../src';
+import { World, Rectangle, Point, Vector, CollisionEvent } from '../../src';
 
 export default function (app: PIXI.Application): void {
   const world = new World();
-  const actor = new Spacial({
-    shape: Shape.RECTANGLE,
+  const actor = new Rectangle({
     parent: app.stage,
     world: world,
     width: 100,
@@ -13,8 +12,7 @@ export default function (app: PIXI.Application): void {
     .position(new Point(10, 10))
     .rotation(3);
 
-  const interactor = new Spacial({
-    shape: Shape.RECTANGLE,
+  const interactor = new Rectangle({
     parent: app.stage,
     world: world,
     width: 350,
@@ -25,8 +23,24 @@ export default function (app: PIXI.Application): void {
   const angle = actor.position().angle(interactor.position());
   actor.velocity(Vector.Zero().magnitude(2).angle(angle));
 
+  actor.on(CollisionEvent.ENTER, () => {
+    actor.color(0x000099);
+  });
+
   actor.on(CollisionEvent.COLLIDE, () => {
-    console.log('hit');
+    actor.color(0x990000);
+  });
+
+  actor.on(CollisionEvent.LEAVE, () => {
+    actor.color(0x009900);
+  });
+
+  actor.on(CollisionEvent.COLLIDE, () => {
+    interactor.color(0x009900);
+  });
+
+  actor.on(CollisionEvent.LEAVE, () => {
+    interactor.color(0x990099);
   });
 
   const startDistance = actor.position().distance(interactor.position());
@@ -49,15 +63,14 @@ export default function (app: PIXI.Application): void {
 
 export const fnStr = `
 import * as PIXI from 'pixi.js';
-import { World, Spacial, Point, Vector, Shape, CollisionEvent } from 'bogie';
+import { World, Rectangle, Point, Vector, CollisionEvent } from 'bogie';
 
 let app: PIXI.Application();
 
 // ... Setup Your PIXI app here ...
 
 const world = new World();
-const actor = new Spacial({
-  shape: Shape.RECTANGLE,
+const actor = new Rectangle({
   parent: app.stage,
   world: world,
   width: 100,
@@ -66,8 +79,7 @@ const actor = new Spacial({
   .position(new Point(10, 10))
   .rotation(3);
 
-const interactor = new Spacial({
-  shape: Shape.RECTANGLE,
+const interactor = new Rectangle({
   parent: app.stage,
   world: world,
   width: 350,
@@ -78,8 +90,24 @@ const interactor = new Spacial({
 const angle = actor.position().angle(interactor.position());
 actor.velocity(Vector.Zero().magnitude(2).angle(angle));
 
+actor.on(CollisionEvent.ENTER, () => {
+  actor.color(0x000099);
+});
+
 actor.on(CollisionEvent.COLLIDE, () => {
-  console.log('hit');
+  actor.color(0x990000);
+});
+
+actor.on(CollisionEvent.LEAVE, () => {
+  actor.color(0x009900);
+});
+
+actor.on(CollisionEvent.COLLIDE, () => {
+  interactor.color(0x009900);
+});
+
+actor.on(CollisionEvent.LEAVE, () => {
+  interactor.color(0x990099);
 });
 
 const startDistance = actor.position().distance(interactor.position());

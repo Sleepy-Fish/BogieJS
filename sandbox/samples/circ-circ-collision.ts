@@ -58,7 +58,7 @@ export default function (app: PIXI.Application): void {
 
 export const fnStr = `
 import * as PIXI from 'pixi.js';
-import { World, Spacial, Point, Vector, Shape, CollisionEvent } from 'bogie';
+import { World, Circle, Point, CollisionEvent } from 'bogie';
 
 let app: PIXI.Application();
 
